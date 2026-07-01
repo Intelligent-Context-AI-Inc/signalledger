@@ -1,0 +1,54 @@
+{
+  "records": [
+    {
+      "record_id": "fineweb_edu_dataset_card",
+      "source_family": "open_science_dataset",
+      "source_name": "FineWeb-Edu",
+      "source_version": "dataset_card",
+      "source_reference_uri": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu",
+      "global_core_relevance": true,
+      "token_count_estimate": 1300000000000,
+      "source_mixture_categories": ["filtered_web", "education_web"],
+      "filtering_methods": ["education_quality_classifier"],
+      "deduplication_methods": ["document_deduplication"],
+      "evaluation_metric_names": ["fineweb_edu_score"],
+      "license_descriptor": "dataset_card",
+      "provenance_links": ["https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu"]
+    },
+    {
+      "record_id": "dolma_ai2_dataset_docs",
+      "source_family": "open_science_dataset",
+      "source_name": "Dolma",
+      "source_version": "public_docs",
+      "source_reference_uri": "https://allenai.org/dolma",
+      "global_core_relevance": true,
+      "token_count_estimate": 3000000000000,
+      "source_mixture_categories": ["web", "books", "code", "academic", "reference"],
+      "filtering_methods": ["quality_filtering"],
+      "deduplication_methods": ["document_deduplication"],
+      "license_descriptor": "ai2_impact",
+      "provenance_links": [
+        "https://allenai.org/dolma",
+        "https://huggingface.co/datasets/allenai/dolma"
+      ]
+    },
+    {
+      "record_id": "dclm_datacomp_lm_paper",
+      "source_family": "open_science_benchmark",
+      "source_name": "DCLM",
+      "source_version": "paper_2024",
+      "source_reference_uri": "https://arxiv.org/abs/2406.11794",
+      "global_core_relevance": true,
+      "source_mixture_categories": ["filtered_web", "benchmark_suite"],
+      "filtering_methods": ["model_based_filtering", "deduplication_filtering"],
+      "evaluation_metric_names": ["mmlu", "hellaswag", "arc", "gsm8k"],
+      "benchmark_count": 53,
+      "model_size_parameters": ["412m", "1b", "7b"],
+      "license_descriptor": "paper_and_repo",
+      "provenance_links": [
+        "https://arxiv.org/abs/2406.11794",
+        "https://github.com/mlfoundations/dclm"
+      ]
+    }
+  ]
+}

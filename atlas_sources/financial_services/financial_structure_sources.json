@@ -1,0 +1,60 @@
+{
+  "records": [
+    {
+      "record_id": "sec_edgar_api_metadata",
+      "source_family": "financial_taxonomy",
+      "source_name": "SEC_EDGAR_APIs",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["filings_metadata", "issuer_metadata"],
+      "regulatory_source_categories": ["sec_edgar", "public_company_filings"],
+      "financial_taxonomy_tags": ["filing_category", "cik", "accession_number"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": [
+        "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      ]
+    },
+    {
+      "record_id": "sec_structured_data_taxonomies",
+      "source_family": "financial_taxonomy",
+      "source_name": "SEC_Taxonomies",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.sec.gov/structureddata/osdstaxonomies",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["xbrl_taxonomy", "structured_disclosure"],
+      "regulatory_source_categories": ["sec_xbrl", "financial_reporting"],
+      "financial_taxonomy_tags": ["us_gaap", "ifrs", "dei", "rr"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.sec.gov/structureddata/osdstaxonomies"]
+    },
+    {
+      "record_id": "finra_regulatory_notices",
+      "source_family": "financial_regulatory",
+      "source_name": "FINRA_Notices",
+      "source_version": "official_index",
+      "source_reference_uri": "https://www.finra.org/rules-guidance/notices",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["broker_dealer_guidance", "oversight_categories"],
+      "regulatory_source_categories": ["finra_notices", "market_integrity", "member_supervision"],
+      "financial_taxonomy_tags": ["sales_practice", "supervision", "market_regulation"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.finra.org/rules-guidance/notices"]
+    },
+    {
+      "record_id": "federal_reserve_2026_stress_scenarios",
+      "source_family": "financial_stress_test",
+      "source_name": "Federal_Reserve_Stress_Test",
+      "source_version": "scenario_2026",
+      "source_reference_uri": "https://www.federalreserve.gov/supervisionreg/dfa-stress-tests-2026.htm",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["macroeconomic_scenario", "bank_capital_planning"],
+      "regulatory_source_categories": ["federal_reserve", "stress_test", "capital_planning"],
+      "financial_taxonomy_tags": ["macro_scenario", "capital_adequacy", "loss_projection"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": [
+        "https://www.federalreserve.gov/supervisionreg/dfa-stress-tests-2026.htm"
+      ]
+    }
+  ]
+}

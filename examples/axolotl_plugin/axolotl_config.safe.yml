@@ -1,0 +1,5 @@
+base_model: base-family
+datasets: training-data-reference
+dataset_prepared_path: s3://training-data
+sequence_len: 2048
+output_dir: s3://training-data

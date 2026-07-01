@@ -1,0 +1,19 @@
+{
+  "domain_id": "healthcare_clinical",
+  "source_family": "clinical_trials_metadata",
+  "source_reference_hash_sha256": "4c94485e0c21ae6c41ce1dfe26db6a9cc8d6a3d20d6bb8d8c1487a3487114b1f",
+  "metadata_fields_available": [
+    "study_phase_tags",
+    "condition_taxonomy_tags",
+    "deidentification_method_tags",
+    "license_descriptor"
+  ],
+  "license_descriptor": "public_metadata_reference",
+  "payload_policy": {
+    "raw_payload_absent": true,
+    "no_dataset_rows": true,
+    "no_prompts": true,
+    "no_embeddings": true,
+    "no_model_weights": true
+  }
+}

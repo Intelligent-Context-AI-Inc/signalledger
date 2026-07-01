@@ -1,0 +1,44 @@
+name: ECL Trainer
+
+on:
+  pull_request:
+    paths:
+      - 'configs/**'
+      - 'data/**'
+      - 'datasets/**'
+      - 'schemas/**'
+      - 'training/**'
+      - 'finetune/**'
+      - 'axolotl/**'
+      - 'recipes/**'
+      - 'notebooks/**'
+      - 'model_card.md'
+      - 'dataset_card.md'
+      - 'pyproject.toml'
+      - 'requirements*.txt'
+      - 'environment*.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  ecl-trainer:
+    runs-on: ubuntu-latest
+    steps:
+      # actions/checkout v4 tag resolved 2026-06-30.
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 2
+      - uses: ./.github/actions/ecl-trainer-scan
+        with:
+          project_namespace: ${{ github.repository }}
+          ledger_path: .ecl-trainer/events.jsonl
+          risk_policy: report_only
+          changed_only: 'true'
+          post_pr_comment: 'true'
+          upload_artifact: 'true'
+          domain_selection_mode: auto
+          enabled_domains: ''

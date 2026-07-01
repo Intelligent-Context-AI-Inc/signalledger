@@ -1,0 +1,8 @@
+{
+  "fixture_id": "payload_key_smuggling_fulltext_001",
+  "surface": "no_payload_validator",
+  "expected_exception": "PayloadExfiltrationException",
+  "metadata": {
+    "fulltext": "blocked"
+  }
+}

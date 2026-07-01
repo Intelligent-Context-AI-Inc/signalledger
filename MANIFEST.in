@@ -1,0 +1,48 @@
+include README.md
+include LICENSE
+include Dockerfile.ecl-trainer
+include verify_ecl_compliance.py
+include .dockerignore
+include .gitlab-ci.ecl-trainer.yml
+include .pre-commit-hooks.yaml
+include .github/workflows/ecl-trainer.yml
+include .github/workflows/ecl-trainer-security.yml
+include .github/actions/ecl-trainer-scan/action.yml
+include scripts/ecl_trainer_clean_room_check.sh
+recursive-include tests/red_team_fixtures *.json
+recursive-include atlas_sources *.json
+recursive-include ecl_trainer/red_team_fixtures *.json
+include docs/AXOLOTL_PLUGIN.md
+include docs/COMPLIANCE_POSITIONING.md
+include docs/GITHUB_ACTION.md
+include docs/GITLAB_CI.md
+include docs/HUGGINGFACE_CALLBACK.md
+include docs/INTELLIGENT_CONTEXT_ATLAS.md
+include docs/INTELLIGENT_CONTEXT_ATLAS_COLLECTION.md
+include docs/NO_PAYLOAD_POLICY.md
+include docs/SCHEMA.md
+include docs/SUPPLY_CHAIN_EVIDENCE.md
+recursive-include docs/vetting *.md
+recursive-include docs/ecl_learning_ledger *.md
+recursive-include docs/security/ecl_learning_ledger *.md
+include examples/local_scan/README.md
+include examples/local_scan/metadata_manifest.safe.json
+include examples/ecl_records/README.md
+include examples/ecl_records/financial-services-atlas-seed-ledger.sample.json
+include examples/ecl_records/sample-events.jsonl
+include examples/github_action/README.md
+include examples/github_action/ecl-trainer.yml
+include examples/github_action/ecl-trainer.manifest.json
+include examples/github_action/expected-pr-comment.md
+include examples/gitlab_ci/README.md
+include examples/gitlab_ci/gitlab-ci.ecl-trainer.yml
+include examples/huggingface_callback/README.md
+include examples/huggingface_callback/trainer_callback_example.py
+include examples/axolotl_plugin/README.md
+include examples/axolotl_plugin/axolotl_config.safe.yml
+include examples/compliance_passport/README.md
+recursive-include examples/atlas_pack_sources *.json
+recursive-include examples/interactive_demo_repo *.json *.md
+recursive-include examples/proof_artifact_gallery *.json *.jsonl *.md
+global-exclude __pycache__ *.py[cod] .DS_Store *.log
+global-exclude .ecl/events.jsonl .ecl-trainer/events.jsonl

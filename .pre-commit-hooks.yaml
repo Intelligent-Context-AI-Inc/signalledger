@@ -1,0 +1,6 @@
+- id: ecl-trainer-scan
+  name: ECL Trainer metadata scan
+  entry: ecl-trainer scan --changed-only
+  language: python
+  pass_filenames: false
+  stages: [pre-commit]

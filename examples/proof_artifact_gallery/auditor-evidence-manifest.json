@@ -1,0 +1,18 @@
+{
+  "artifact_profile": "buyer_demo",
+  "artifacts": {
+    "compliance_passport": "compliance-passport.md",
+    "ledger": "events.jsonl",
+    "pr_comment": "pr-comment.md",
+    "risk_report": "risk-report.md",
+    "verification": "verification.json"
+  },
+  "domain_scope": ["financial_services"],
+  "local_only": true,
+  "payload_policy": {
+    "raw_payload_absent": true,
+    "dataset_upload_performed": false,
+    "saas_submission_performed": false
+  },
+  "review_status": "sanitized_example"
+}

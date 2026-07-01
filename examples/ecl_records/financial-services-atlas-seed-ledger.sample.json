@@ -1,0 +1,225 @@
+[
+  {
+    "data_profile_generation": "SYNTHETIC_ALPHA_SAMPLE_FOR_SCHEMA_VALIDATION_ONLY",
+    "atlas_record_id": "6f38d4e2-9b21-4b30-9d3b-2c6b9a1c7401",
+    "source_baseline_identity": "HuggingFace/FineWeb-Edu/structural-10B-financial-profile",
+    "lineage_cryptographic_signatures": {
+      "source_manifest_sha256": "ea8262955f3454a733ec62032ea1e4d8f984487c3fdab47809c483c87c30d8c8",
+      "previous_record_sha256": null,
+      "record_self_sha256": "aa7605b7ed6fb55ce9a038c39dbd4328411ebb58c4a1af81a82a73bd090604e5"
+    },
+    "token_profile_metrics": {
+      "token_count_estimate": 10000000000,
+      "entropy_score": 7.842,
+      "token_density_histogram_bounds": {
+        "p05": 0.018,
+        "p25": 0.094,
+        "p50": 0.216,
+        "p75": 0.471,
+        "p95": 0.883
+      }
+    },
+    "domain_extension_financial_tags": {
+      "regulatory_framework_mapping": [
+        "SEC_2026_COMPLIANCE",
+        "FINRA_RULE_AMENDMENT_2026",
+        "FRB_STRESS_TEST_2026"
+      ],
+      "fiscal_period_bounds": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31"
+      },
+      "structural_sector_ratios": {
+        "sec_filing_metadata": 0.5,
+        "earnings_event_metadata": 0.3,
+        "market_reference_metadata": 0.2
+      }
+    },
+    "historical_evaluation_deltas": [
+      {
+        "eval_suite_name": "MMLU-Financial-Ablation",
+        "base_performance_score": 0.711,
+        "delta_impact_coefficient": 0.039
+      },
+      {
+        "eval_suite_name": "Custom-SEC-Audit-Suite",
+        "base_performance_score": 0.764,
+        "delta_impact_coefficient": 0.054
+      }
+    ],
+    "pre_flight_shield_assertions": {
+      "model_inbreeding_risk": 0.18,
+      "benchmark_contamination_detected": false,
+      "payload_policy_validation_passed": true
+    }
+  },
+  {
+    "data_profile_generation": "SYNTHETIC_ALPHA_SAMPLE_FOR_SCHEMA_VALIDATION_ONLY",
+    "atlas_record_id": "2e5a7c91-61f4-4f79-83e8-0df3d178c2aa",
+    "source_baseline_identity": "AllenAI/Dolma-1.7/finance-structural-profile",
+    "lineage_cryptographic_signatures": {
+      "source_manifest_sha256": "32bd19179e3098024a4733e1f40d3b35407a472e4500c4dff08256644756befc",
+      "previous_record_sha256": "aa7605b7ed6fb55ce9a038c39dbd4328411ebb58c4a1af81a82a73bd090604e5",
+      "record_self_sha256": "601d1ec945a217fdc7029ef9e7d22dbf7eb5d89b567bf0046e6eb3a55afdc1bb"
+    },
+    "token_profile_metrics": {
+      "token_count_estimate": 17500000000,
+      "entropy_score": 8.113,
+      "token_density_histogram_bounds": {
+        "p05": 0.022,
+        "p25": 0.108,
+        "p50": 0.244,
+        "p75": 0.503,
+        "p95": 0.907
+      }
+    },
+    "domain_extension_financial_tags": {
+      "regulatory_framework_mapping": [
+        "SEC_2026_COMPLIANCE",
+        "FFIEC_CALL_REPORT_ALIGNMENT",
+        "GLEIF_LEI_REFERENCE_2026"
+      ],
+      "fiscal_period_bounds": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-06-30"
+      },
+      "structural_sector_ratios": {
+        "bank_supervision_metadata": 0.34,
+        "issuer_reference_metadata": 0.41,
+        "risk_factor_taxonomy": 0.25
+      }
+    },
+    "historical_evaluation_deltas": [
+      {
+        "eval_suite_name": "MMLU-Financial-Ablation",
+        "base_performance_score": 0.721,
+        "delta_impact_coefficient": 0.034
+      },
+      {
+        "eval_suite_name": "FRB-Stress-Scenario-Reasoning",
+        "base_performance_score": 0.688,
+        "delta_impact_coefficient": 0.059
+      }
+    ],
+    "pre_flight_shield_assertions": {
+      "model_inbreeding_risk": 0.22,
+      "benchmark_contamination_detected": false,
+      "payload_policy_validation_passed": true
+    }
+  },
+  {
+    "data_profile_generation": "SYNTHETIC_ALPHA_SAMPLE_FOR_SCHEMA_VALIDATION_ONLY",
+    "atlas_record_id": "a0bd2f4e-77c2-44e5-9bc6-7a4a02d93e17",
+    "source_baseline_identity": "DataComp-LM/DCLM-2024/financial-eval-overlay",
+    "lineage_cryptographic_signatures": {
+      "source_manifest_sha256": "c4cfb182785fa20f55eb2d0d84bae73a82c617654d603a056bcddb418b98de6f",
+      "previous_record_sha256": "601d1ec945a217fdc7029ef9e7d22dbf7eb5d89b567bf0046e6eb3a55afdc1bb",
+      "record_self_sha256": "af4ded377d64ba6ab90aa0b5a00e8734a493c5ef490463d7361c1bacdda85972"
+    },
+    "token_profile_metrics": {
+      "token_count_estimate": 24000000000,
+      "entropy_score": 7.976,
+      "token_density_histogram_bounds": {
+        "p05": 0.016,
+        "p25": 0.087,
+        "p50": 0.231,
+        "p75": 0.489,
+        "p95": 0.861
+      }
+    },
+    "domain_extension_financial_tags": {
+      "regulatory_framework_mapping": [
+        "SEC_XBRL_TAXONOMY_2026",
+        "CFTC_MARKET_REPORT_ALIGNMENT",
+        "FINRA_SUPERVISION_CATEGORY_2026"
+      ],
+      "fiscal_period_bounds": {
+        "start_date": "2026-07-01",
+        "end_date": "2026-09-30"
+      },
+      "structural_sector_ratios": {
+        "xbrl_taxonomy_metadata": 0.44,
+        "derivatives_market_metadata": 0.22,
+        "broker_dealer_oversight_metadata": 0.34
+      }
+    },
+    "historical_evaluation_deltas": [
+      {
+        "eval_suite_name": "Custom-SEC-Audit-Suite",
+        "base_performance_score": 0.777,
+        "delta_impact_coefficient": 0.046
+      },
+      {
+        "eval_suite_name": "Benchmark-Leakage-Resistance-Check",
+        "base_performance_score": 0.937,
+        "delta_impact_coefficient": -0.009
+      }
+    ],
+    "pre_flight_shield_assertions": {
+      "model_inbreeding_risk": 0.27,
+      "benchmark_contamination_detected": false,
+      "payload_policy_validation_passed": true
+    }
+  },
+  {
+    "data_profile_generation": "SYNTHETIC_ALPHA_SAMPLE_FOR_SCHEMA_VALIDATION_ONLY",
+    "atlas_record_id": "d9c47b65-3e8a-4fd9-92b0-5f8e173a6c24",
+    "source_baseline_identity": "ECL/Financial-Services-Atlas/public-alpha-2026Q4",
+    "lineage_cryptographic_signatures": {
+      "source_manifest_sha256": "b0ee7fd90b43133968f605211e5062a80ec8795c3e2d088becdc423b076ee0be",
+      "previous_record_sha256": "af4ded377d64ba6ab90aa0b5a00e8734a493c5ef490463d7361c1bacdda85972",
+      "record_self_sha256": "2e07d37cc1765057252cfc4dfdff35fc9ae26755893f1902fbfbaa58e697eabd"
+    },
+    "token_profile_metrics": {
+      "token_count_estimate": 31000000000,
+      "entropy_score": 8.204,
+      "token_density_histogram_bounds": {
+        "p05": 0.019,
+        "p25": 0.101,
+        "p50": 0.257,
+        "p75": 0.526,
+        "p95": 0.918
+      }
+    },
+    "domain_extension_financial_tags": {
+      "regulatory_framework_mapping": [
+        "SEC_2026_COMPLIANCE",
+        "FRB_STRESS_TEST_2026",
+        "GLEIF_LEI_REFERENCE_2026",
+        "FFIEC_CALL_REPORT_ALIGNMENT"
+      ],
+      "fiscal_period_bounds": {
+        "start_date": "2026-10-01",
+        "end_date": "2026-12-31"
+      },
+      "structural_sector_ratios": {
+        "public_company_filing_metadata": 0.38,
+        "legal_entity_reference_metadata": 0.27,
+        "bank_supervision_metadata": 0.2,
+        "market_risk_taxonomy": 0.15
+      }
+    },
+    "historical_evaluation_deltas": [
+      {
+        "eval_suite_name": "MMLU-Financial-Ablation",
+        "base_performance_score": 0.735,
+        "delta_impact_coefficient": 0.049
+      },
+      {
+        "eval_suite_name": "FRB-Stress-Scenario-Reasoning",
+        "base_performance_score": 0.704,
+        "delta_impact_coefficient": 0.067
+      },
+      {
+        "eval_suite_name": "Custom-SEC-Audit-Suite",
+        "base_performance_score": 0.79,
+        "delta_impact_coefficient": 0.043
+      }
+    ],
+    "pre_flight_shield_assertions": {
+      "model_inbreeding_risk": 0.2,
+      "benchmark_contamination_detected": false,
+      "payload_policy_validation_passed": true
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "fixture_id": "abusive_uri_metadata_oversized_query_001",
+  "surface": "atlas_source_record",
+  "expected_exception": "ValidationError",
+  "metadata": {
+    "record_id": "atlas_uri_case",
+    "source_family": "open_science_dataset",
+    "source_name": "public_meta",
+    "source_version": "v1",
+    "source_reference_uri": "https://example.test/source?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "global_core_relevance": true
+  }
+}

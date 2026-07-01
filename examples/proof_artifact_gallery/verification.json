@@ -1,0 +1,9 @@
+{
+  "event_count": 2,
+  "first_broken_link": null,
+  "last_event_hash_sha256": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+  "payload_policy": {
+    "raw_payload_absent": true
+  },
+  "valid": true
+}

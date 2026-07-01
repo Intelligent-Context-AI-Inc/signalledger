@@ -1,0 +1,161 @@
+name: ECL Trainer Scan
+description: Metadata-only ECL Trainer CI scan
+inputs:
+  project_namespace:
+    required: true
+    description: Project namespace for local ledger events
+  ledger_path:
+    required: false
+    default: .ecl-trainer/events.jsonl
+    description: Local append-only event log path
+  risk_policy:
+    required: false
+    default: report_only
+    description: report_only, warn, block_on_high_risk, or block_on_payload_violation
+  changed_only:
+    required: false
+    default: 'true'
+    description: Scan changed files only
+  output_dir:
+    required: false
+    default: .ecl-trainer/reports
+    description: Local directory for metadata-only reports
+  post_pr_comment:
+    required: false
+    default: 'true'
+    description: Post or update a metadata-only PR comment when GitHub token permissions allow
+  upload_artifact:
+    required: false
+    default: 'true'
+    description: Upload metadata-only report artifacts
+  artifact_name:
+    required: false
+    default: ecl-trainer-local-report
+    description: GitHub artifact name for local reports and ledger
+  enabled_domains:
+    required: false
+    default: ''
+    description: Comma-separated enabled domain extensions for the Intelligent Context Atlas
+  domain_selection_mode:
+    required: false
+    default: auto
+    description: auto, explicit, or core_only
+  ignore_staleness:
+    required: false
+    default: 'false'
+    description: Mute non-blocking Atlas lifecycle staleness warnings
+  saas_endpoint:
+    required: false
+    default: ''
+    description: Optional SaaS endpoint
+  api_key:
+    required: false
+    default: ''
+    description: Optional SaaS API key
+  fail_on_payload_violation:
+    required: false
+    default: 'true'
+    description: Fail when payload policy blocks output
+runs:
+  using: composite
+  steps:
+    - name: Build local ECL Trainer Docker image
+      shell: bash
+      run: |
+        action_repo_root="$(cd "${GITHUB_ACTION_PATH}/../../.." && pwd)"
+        docker build \
+          --file "${action_repo_root}/Dockerfile.ecl-trainer" \
+          --tag ecl-trainer-ci:${GITHUB_SHA:-local} \
+          "${action_repo_root}"
+
+    - name: Generate local training-data risk report and passport
+      shell: bash
+      env:
+        ECL_TRAINER_API_KEY: ''
+      run: |
+        set +e
+        mkdir -p "${{ inputs.output_dir }}"
+        changed_flag="--changed-only"
+        if [[ "${{ inputs.changed_only }}" != "true" ]]; then
+          changed_flag="--no-changed-only"
+        fi
+        staleness_flag=()
+        if [[ "${{ inputs.ignore_staleness }}" == "true" ]]; then
+          staleness_flag=(--ignore-staleness)
+        fi
+        event_mount=()
+        if [[ -n "${GITHUB_EVENT_PATH:-}" && -f "${GITHUB_EVENT_PATH}" ]]; then
+          event_mount=(-v "${GITHUB_EVENT_PATH}:/github/event.json:ro" -e GITHUB_EVENT_PATH=/github/event.json)
+        fi
+        docker run --rm \
+          -v "${GITHUB_WORKSPACE}:/workspace" \
+          "${event_mount[@]}" \
+          -e GITHUB_ACTIONS=true \
+          -e GITHUB_RUN_ID \
+          -e GITHUB_SHA \
+          -e GITHUB_REF \
+          -e GITHUB_REPOSITORY \
+          -e GITHUB_EVENT_NAME \
+          -e GITHUB_API_URL \
+          -e GITHUB_WORKSPACE=/workspace \
+          ecl-trainer-ci:${GITHUB_SHA:-local} \
+          github-pr-report \
+          --project-namespace "${{ inputs.project_namespace }}" \
+          --ledger-path "${{ inputs.ledger_path }}" \
+          --risk-policy "${{ inputs.risk_policy }}" \
+          --output-dir "${{ inputs.output_dir }}" \
+          --enabled-domains "${{ inputs.enabled_domains }}" \
+          --domain-selection-mode "${{ inputs.domain_selection_mode }}" \
+          "${staleness_flag[@]}" \
+          "${changed_flag}"
+        echo "$?" > "${{ inputs.output_dir }}/exit-code"
+        exit 0
+
+    - name: Write job summary
+      shell: bash
+      run: |
+        if [[ -f "${{ inputs.output_dir }}/pr-comment.md" && -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+          cat "${{ inputs.output_dir }}/pr-comment.md" >> "${GITHUB_STEP_SUMMARY}"
+        fi
+
+    - name: Post sticky PR comment
+      if: inputs.post_pr_comment == 'true'
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        if [[ ! -f "${{ inputs.output_dir }}/pr-comment.md" ]]; then
+          exit 0
+        fi
+        event_mount=()
+        if [[ -n "${GITHUB_EVENT_PATH:-}" && -f "${GITHUB_EVENT_PATH}" ]]; then
+          event_mount=(-v "${GITHUB_EVENT_PATH}:/github/event.json:ro" -e GITHUB_EVENT_PATH=/github/event.json)
+        fi
+        docker run --rm \
+          -v "${GITHUB_WORKSPACE}:/workspace" \
+          "${event_mount[@]}" \
+          -e GITHUB_TOKEN \
+          -e GITHUB_REPOSITORY \
+          -e GITHUB_API_URL \
+          ecl-trainer-ci:${GITHUB_SHA:-local} \
+          post-github-comment \
+          --comment-path "${{ inputs.output_dir }}/pr-comment.md" || true
+
+    - name: Upload local ECL Trainer artifacts
+      if: inputs.upload_artifact == 'true'
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      with:
+        name: ${{ inputs.artifact_name }}
+        if-no-files-found: error
+        path: |
+          ${{ inputs.output_dir }}/**
+          ${{ inputs.ledger_path }}
+
+    - name: Enforce ECL Trainer risk policy
+      shell: bash
+      run: |
+        exit_code="$(cat "${{ inputs.output_dir }}/exit-code" 2>/dev/null || echo 1)"
+        if [[ "${{ inputs.fail_on_payload_violation }}" != "true" && "${{ inputs.risk_policy }}" == "block_on_payload_violation" ]]; then
+          exit 0
+        fi
+        exit "${exit_code}"

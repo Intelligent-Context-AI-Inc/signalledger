@@ -1,0 +1,13 @@
+{
+  "project_namespace": "org/project",
+  "training_run_id": "run_001",
+  "dataset_ref": "s3://training-data",
+  "schema_hash_sha256": "3de8f8b0dc94b8c2230fab9ec0ba0506d6018c75963eea372c5599f91f496f4f",
+  "source_root_hash_sha256": "03536f27840d8a78b768d58a292f68fc475960d5970d6b3c13aaae87d7e3da2f",
+  "metrics_delta": {
+    "eval_metric_a": 0.02
+  },
+  "priority_vector": {
+    "eval_metric_a": 1.0
+  }
+}

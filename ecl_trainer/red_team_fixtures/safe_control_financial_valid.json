@@ -1,0 +1,17 @@
+{
+  "fixture_id": "safe_control_financial_valid_001",
+  "surface": "preflight_shield",
+  "expected_result": "info_alert",
+  "enabled_domains": "financial_services",
+  "domain_selection_mode": "explicit",
+  "metadata": {
+    "project_namespace": "red_team_fin",
+    "industry_domain": "financial_services",
+    "dataset_identifier_hash_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "schema_hash_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "regulatory_framework_tags": ["SEC_2026_COMPLIANCE"],
+    "market_sector_distribution": { "equities": 0.5, "fixed_income": 0.5 },
+    "temporal_fiscal_bounds": { "start": "2026-01-01", "end": "2026-03-31" },
+    "entity_coverage_density": { "issuer_density": 0.5, "counterparty_density": 0.5 }
+  }
+}

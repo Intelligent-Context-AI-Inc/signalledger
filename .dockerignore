@@ -1,0 +1,58 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+build
+*.egg-info
+
+# Git
+.git
+.gitignore
+
+# Environment files (secrets)
+.env*
+!.env.example
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log
+
+# Test coverage
+coverage
+
+# Python caches
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.pyright
+
+# Local ECL Trainer evidence
+.ecl
+.ecl-trainer
+atlas_artifacts
+
+# Documentation (not needed in container)
+docs
+*.md
+!README.md
+
+# Development tools
+tools/code-review
+.code-review-state.json
+
+# CI/CD configs
+.github
+
+# Terraform
+infra
+
+# Salesforce LWC
+salesforce

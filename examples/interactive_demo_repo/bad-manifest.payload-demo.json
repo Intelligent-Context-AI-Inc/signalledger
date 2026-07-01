@@ -1,0 +1,7 @@
+{
+  "project_namespace": "demo-org/ecl-learning-ledger",
+  "domain": "financial_services",
+  "dataset_identifier_hash_sha256": "c51ce410c124a10e0db5e4b97fc2af39b70d774a9b13d07dbf7d7ee9aeb3c3d7",
+  "schema_hash_sha256": "7f83b1657ff1fc53b92dc18148a1d65dfa13503a2d4aeccda0f1f81f1a1b31a8",
+  "raw_preview_text": "blocked"
+}

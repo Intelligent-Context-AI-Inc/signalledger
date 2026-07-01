@@ -1,0 +1,26 @@
+name: ECL Trainer Example
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  ecl-trainer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - uses: Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan@v0.1.0-alpha.1
+        with:
+          project_namespace: org/project
+          ledger_path: .ecl/events.jsonl
+          risk_policy: report_only
+          changed_only: 'true'
+          post_pr_comment: 'true'
+          upload_artifact: 'true'
+          domain_selection_mode: auto
+          enabled_domains: ''

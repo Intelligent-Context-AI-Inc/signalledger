@@ -1,0 +1,11 @@
+ecl_trainer_scan:
+  image: python:3.11
+  stage: test
+  script:
+    - python -m pip install .
+    - ecl-trainer gitlab-ci --project-namespace "org/project" --ledger-path ".ecl/events.jsonl" --risk-policy "report_only"
+  artifacts:
+    when: always
+    paths:
+      - ecl-trainer-artifacts/ecl-report.md
+      - ecl-trainer-artifacts/ecl-report.json

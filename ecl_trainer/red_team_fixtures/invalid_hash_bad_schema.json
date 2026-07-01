@@ -1,0 +1,10 @@
+{
+  "fixture_id": "invalid_hash_bad_schema_001",
+  "surface": "dataset_registered_event",
+  "expected_exception": "ValidationError",
+  "metadata": {
+    "dataset_identifier_hash_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "schema_hash_sha256": "abc",
+    "metadata_record_hash_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+}

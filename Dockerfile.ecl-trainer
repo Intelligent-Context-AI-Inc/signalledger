@@ -1,0 +1,25 @@
+FROM python:3.11-slim-bookworm@sha256:721dc13fd1be0a771e54b72097634291d628d0007dee9da777e2ce676a9c998f
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    ECL_TRAINER_NO_TELEMETRY=1
+
+WORKDIR /app
+RUN apt-get update \
+    && apt-get install --no-install-recommends --yes ca-certificates git \
+    && rm -rf /var/lib/apt/lists/*
+COPY pyproject.toml README.md MANIFEST.in ./
+COPY ecl_trainer ./ecl_trainer
+COPY atlas_pipeline ./atlas_pipeline
+COPY atlas_sources ./atlas_sources
+RUN python -m pip install --no-cache-dir .
+RUN mkdir -p /opt/ecl-trainer/atlas \
+    && python -m atlas_pipeline.build_atlas \
+        --sources-root atlas_sources \
+        --output-path /opt/ecl-trainer/atlas/intelligent-context-atlas.duckdb
+
+WORKDIR /workspace
+ENV ECL_ATLAS_PATH=/opt/ecl-trainer/atlas/intelligent-context-atlas.duckdb
+ENTRYPOINT ["ecl-trainer"]
+CMD ["--help"]

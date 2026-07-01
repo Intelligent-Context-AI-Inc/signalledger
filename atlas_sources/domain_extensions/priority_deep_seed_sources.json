@@ -1,0 +1,287 @@
+{
+  "records": [
+    {
+      "record_id": "gleif_lei_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "GLEIF_LEI_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.gleif.org/en/lei-data/gleif-api",
+      "domain_id": "financial_services",
+      "source_mixture_categories": [
+        "legal_entity_reference_metadata",
+        "ownership_reference_metadata"
+      ],
+      "regulatory_source_categories": ["legal_entity_identifier", "entity_reference_data"],
+      "financial_taxonomy_tags": ["lei", "legal_entity", "bic", "isin"],
+      "domain_taxonomy_tags": ["entity_identifier", "ownership", "issuer"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.gleif.org/en/lei-data/gleif-api"]
+    },
+    {
+      "record_id": "gleif_golden_copy_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "GLEIF_Golden_Copy",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.gleif.org/en/lei-data/gleif-golden-copy/download-the-golden-copy",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["lei_delta_metadata", "reference_data_quality"],
+      "regulatory_source_categories": ["legal_entity_identifier", "reference_data_reporting"],
+      "financial_taxonomy_tags": ["golden_copy", "delta_file", "cdf"],
+      "domain_taxonomy_tags": ["entity_status", "registration_authority", "lei_issuer"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": [
+        "https://www.gleif.org/en/lei-data/gleif-golden-copy/download-the-golden-copy"
+      ]
+    },
+    {
+      "record_id": "cftc_commitments_traders_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "CFTC_Commitments_of_Traders",
+      "source_version": "official_data",
+      "source_reference_uri": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["derivatives_market_metadata", "position_category_metadata"],
+      "regulatory_source_categories": ["cftc_market_reports", "futures_options"],
+      "financial_taxonomy_tags": ["open_interest", "commercial", "noncommercial", "commodity"],
+      "domain_taxonomy_tags": ["market_participant", "contract_market", "position"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm"]
+    },
+    {
+      "record_id": "ffiec_call_report_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "FFIEC_Call_Report",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://cdr.ffiec.gov/public/",
+      "domain_id": "financial_services",
+      "source_mixture_categories": ["bank_call_report_metadata", "institution_financial_metadata"],
+      "regulatory_source_categories": ["ffiec_call_report", "bank_supervision"],
+      "financial_taxonomy_tags": ["rssd_id", "call_report", "schedule", "institution"],
+      "domain_taxonomy_tags": ["bank", "schedule", "capital", "asset"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://cdr.ffiec.gov/public/"]
+    },
+    {
+      "record_id": "cms_data_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "CMS_Data_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://data.cms.gov/api-docs",
+      "domain_id": "healthcare_clinical",
+      "source_mixture_categories": ["healthcare_provider_metadata", "cms_open_data_metadata"],
+      "regulatory_source_categories": ["cms_public_data", "provider_quality"],
+      "domain_taxonomy_tags": ["provider", "measure", "schema", "dataset"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://data.cms.gov/api-docs"]
+    },
+    {
+      "record_id": "cms_blue_button_fhir_metadata",
+      "source_family": "domain_standard",
+      "source_name": "CMS_Blue_Button_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://bluebutton.cms.gov/api-documentation/",
+      "domain_id": "healthcare_clinical",
+      "source_mixture_categories": ["claims_metadata", "fhir_claims_exchange"],
+      "regulatory_source_categories": ["medicare_claims_api"],
+      "domain_taxonomy_tags": ["fhir", "explanation_of_benefit", "beneficiary", "claim"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://bluebutton.cms.gov/api-documentation/"]
+    },
+    {
+      "record_id": "umls_api_metadata",
+      "source_family": "domain_taxonomy",
+      "source_name": "UMLS_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://documentation.uts.nlm.nih.gov/",
+      "domain_id": "healthcare_clinical",
+      "source_mixture_categories": [
+        "biomedical_vocabulary_metadata",
+        "clinical_terminology_crosswalk"
+      ],
+      "regulatory_source_categories": ["health_vocabulary_interoperability"],
+      "domain_taxonomy_tags": ["concept", "atom", "source_vocabulary", "semantic_type"],
+      "license_descriptor": "registration_required_metadata_reference",
+      "provenance_links": ["https://documentation.uts.nlm.nih.gov/"]
+    },
+    {
+      "record_id": "mesh_rdf_metadata",
+      "source_family": "domain_taxonomy",
+      "source_name": "MeSH_RDF",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://id.nlm.nih.gov/mesh/",
+      "domain_id": "healthcare_clinical",
+      "source_mixture_categories": [
+        "biomedical_subject_heading_metadata",
+        "linked_data_vocabulary"
+      ],
+      "regulatory_source_categories": ["biomedical_taxonomy"],
+      "domain_taxonomy_tags": ["descriptor", "concept", "tree_number", "qualifier"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://id.nlm.nih.gov/mesh/"]
+    },
+    {
+      "record_id": "federal_register_api_metadata",
+      "source_family": "domain_regulatory",
+      "source_name": "Federal_Register_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.federalregister.gov/developers/documentation/api/v1",
+      "domain_id": "legal_regulatory",
+      "source_mixture_categories": ["federal_register_metadata", "agency_rulemaking_metadata"],
+      "regulatory_source_categories": ["federal_register", "rulemaking"],
+      "domain_taxonomy_tags": ["agency", "document_type", "docket", "citation"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.federalregister.gov/developers/documentation/api/v1"]
+    },
+    {
+      "record_id": "govinfo_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "GovInfo_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.govinfo.gov/developers",
+      "domain_id": "legal_regulatory",
+      "source_mixture_categories": ["federal_publication_metadata", "government_package_metadata"],
+      "regulatory_source_categories": ["government_publication", "federal_metadata"],
+      "domain_taxonomy_tags": ["collection", "package", "granule", "published_date"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.govinfo.gov/developers"]
+    },
+    {
+      "record_id": "courtlistener_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "CourtListener_API",
+      "source_version": "v4_docs",
+      "source_reference_uri": "https://wiki.free.law/c/courtlistener/help/api/rest/v4/overview",
+      "domain_id": "legal_regulatory",
+      "source_mixture_categories": ["court_metadata", "case_citation_metadata"],
+      "regulatory_source_categories": ["court_records", "legal_research_metadata"],
+      "domain_taxonomy_tags": ["docket", "opinion", "court", "citation"],
+      "license_descriptor": "nonprofit_api_metadata_reference",
+      "provenance_links": ["https://wiki.free.law/c/courtlistener/help/api/rest/v4/overview"]
+    },
+    {
+      "record_id": "uspto_open_data_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "USPTO_Open_Data_Portal",
+      "source_version": "official_portal",
+      "source_reference_uri": "https://data.uspto.gov/",
+      "domain_id": "legal_regulatory",
+      "source_mixture_categories": ["patent_metadata", "trademark_metadata"],
+      "regulatory_source_categories": ["intellectual_property_records"],
+      "domain_taxonomy_tags": ["application", "patent", "trademark", "assignee"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://data.uspto.gov/"]
+    },
+    {
+      "record_id": "nvd_cve_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "NVD_CVE_API",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://nvd.nist.gov/developers/vulnerabilities",
+      "domain_id": "it_software",
+      "source_mixture_categories": ["vulnerability_metadata", "security_enrichment_metadata"],
+      "regulatory_source_categories": ["nist_vulnerability_database"],
+      "domain_taxonomy_tags": ["cve", "cwe", "cvss", "cpe"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://nvd.nist.gov/developers/vulnerabilities"]
+    },
+    {
+      "record_id": "cisa_kev_catalog_metadata",
+      "source_family": "domain_regulatory",
+      "source_name": "CISA_KEV_Catalog",
+      "source_version": "official_catalog",
+      "source_reference_uri": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "domain_id": "it_software",
+      "source_mixture_categories": [
+        "known_exploited_vulnerability_metadata",
+        "remediation_due_date_metadata"
+      ],
+      "regulatory_source_categories": ["cisa_kev", "active_exploitation"],
+      "domain_taxonomy_tags": ["vendor", "product", "cve", "due_date"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://www.cisa.gov/known-exploited-vulnerabilities-catalog"]
+    },
+    {
+      "record_id": "osv_schema_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "OSV_Schema_API",
+      "source_version": "public_docs",
+      "source_reference_uri": "https://osv.dev/",
+      "domain_id": "it_software",
+      "source_mixture_categories": [
+        "open_source_vulnerability_metadata",
+        "package_version_metadata"
+      ],
+      "regulatory_source_categories": ["open_source_security"],
+      "domain_taxonomy_tags": ["ecosystem", "package", "affected_range", "alias"],
+      "license_descriptor": "public_metadata_reference",
+      "provenance_links": ["https://osv.dev/"]
+    },
+    {
+      "record_id": "spdx_license_list_metadata",
+      "source_family": "domain_standard",
+      "source_name": "SPDX_License_List",
+      "source_version": "official_reference",
+      "source_reference_uri": "https://spdx.org/licenses",
+      "domain_id": "it_software",
+      "source_mixture_categories": ["software_license_metadata", "open_source_compliance_taxonomy"],
+      "regulatory_source_categories": ["license_compliance"],
+      "domain_taxonomy_tags": ["license_id", "exception_id", "canonical_url", "license_name"],
+      "license_descriptor": "standards_reference",
+      "provenance_links": ["https://spdx.org/licenses"]
+    },
+    {
+      "record_id": "dailymed_api_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "DailyMed_API",
+      "source_version": "v2_docs",
+      "source_reference_uri": "https://dailymed.nlm.nih.gov/dailymed/app-support-web-services.cfm",
+      "domain_id": "pharma_biotech",
+      "source_mixture_categories": ["drug_labeling_metadata", "spl_metadata"],
+      "regulatory_source_categories": ["structured_product_labeling"],
+      "domain_taxonomy_tags": ["spl", "set_id", "ndc", "label"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://dailymed.nlm.nih.gov/dailymed/app-support-web-services.cfm"]
+    },
+    {
+      "record_id": "openfda_drug_event_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "openFDA_Drug_Event",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://open.fda.gov/apis/drug/event/",
+      "domain_id": "pharma_biotech",
+      "source_mixture_categories": ["adverse_event_metadata", "faers_metadata"],
+      "regulatory_source_categories": ["fda_adverse_event_reporting"],
+      "domain_taxonomy_tags": ["reaction", "drug", "patient", "report"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://open.fda.gov/apis/drug/event/"]
+    },
+    {
+      "record_id": "openfda_drug_ndc_metadata",
+      "source_family": "domain_open_data",
+      "source_name": "openFDA_Drug_NDC",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://open.fda.gov/apis/drug/ndc/",
+      "domain_id": "pharma_biotech",
+      "source_mixture_categories": ["drug_product_metadata", "ndc_identifier_metadata"],
+      "regulatory_source_categories": ["fda_drug_listing"],
+      "domain_taxonomy_tags": ["ndc", "product", "labeler", "dosage_form"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": ["https://open.fda.gov/apis/drug/ndc/"]
+    },
+    {
+      "record_id": "fda_orange_book_metadata",
+      "source_family": "domain_regulatory",
+      "source_name": "FDA_Orange_Book",
+      "source_version": "official_docs",
+      "source_reference_uri": "https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files",
+      "domain_id": "pharma_biotech",
+      "source_mixture_categories": ["drug_approval_metadata", "therapeutic_equivalence_metadata"],
+      "regulatory_source_categories": ["fda_orange_book"],
+      "domain_taxonomy_tags": ["application_number", "product_number", "te_code", "ingredient"],
+      "license_descriptor": "official_public_reference",
+      "provenance_links": [
+        "https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files"
+      ]
+    }
+  ]
+}

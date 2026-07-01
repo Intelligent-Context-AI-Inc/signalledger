@@ -1,0 +1,68 @@
+PROPRIETARY SOFTWARE LICENSE
+
+Copyright (c) 2024-2026 Intelligent Context AI, Inc. All Rights Reserved.
+
+This software and associated documentation files (the "Software") are the
+proprietary and confidential property of Intelligent Context AI, Inc.
+
+NOTICE: All information contained herein is, and remains the property of
+Intelligent Context AI, Inc. and its suppliers, if any. The intellectual
+and technical concepts contained herein are proprietary to Intelligent
+Context AI, Inc. and its suppliers and may be covered by U.S. and Foreign
+Patents, patents in process, and are protected by trade secret or copyright
+law.
+
+NO LICENSE GRANTED
+
+No license, express or implied, by estoppel or otherwise, to any intellectual
+property rights is granted by this document or by any part of the Software.
+
+RESTRICTIONS
+
+You may not, without the prior written permission of Intelligent Context AI, Inc.:
+
+1. Copy, modify, or distribute the Software or any portion thereof.
+2. Reverse engineer, disassemble, decompile, or otherwise attempt to derive
+   the source code of the Software.
+3. Sublicense, lease, rent, loan, or transfer the Software to any third party.
+4. Remove or alter any proprietary notices, labels, or marks on the Software.
+5. Use the Software for any purpose other than as expressly authorized in a
+   separate written agreement with Intelligent Context AI, Inc.
+
+DISCLAIMER OF WARRANTIES
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL INTELLIGENT CONTEXT AI, INC. BE LIABLE FOR ANY INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+MARKETPLACE DISTRIBUTION
+
+This Software may be distributed through Google Cloud Marketplace, AWS
+Marketplace, and Azure Marketplace subject to the terms and conditions of
+those respective platforms and any applicable subscription agreements.
+Your use of the Software through these marketplaces is governed by the
+marketplace terms and your subscription agreement with Intelligent Context
+AI, Inc.
+
+OPEN SOURCE COMPONENTS
+
+Certain components of this Software may be provided under separate open source
+licenses. Such components are identified in their respective directories and
+are subject to the terms of their applicable open source licenses.
+
+CONTACT
+
+For licensing inquiries, please contact:
+Intelligent Context AI, Inc.
+Email: ash@intelligentcontext.ai
+Website: https://timetocontext.co
