@@ -8,9 +8,9 @@
   "benchmark_aliases": ["mmlu_finance"],
   "payload_policy": {
     "raw_payload_absent": true,
-    "no_dataset_rows": true,
-    "no_prompts": true,
-    "no_embeddings": true,
-    "no_model_weights": true
+    "dataset_records_absent": true,
+    "instruction_pairs_absent": true,
+    "embeddings_absent": true,
+    "model_weights_absent": true
   }
 }

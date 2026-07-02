@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 import pytest
 
 from ecl_trainer.core.exceptions import PayloadExfiltrationException
@@ -59,3 +62,17 @@ def test_valid_eval_and_ci_events_serialize():
     )
     assert "eval_outcome" in canonical_json(eval_event)
     assert "ci_scan" in canonical_json(ci_event)
+
+
+@pytest.mark.parametrize(
+    "example_path",
+    [
+        "examples/github_action/ecl-trainer.manifest.json",
+        "examples/interactive_demo_repo/safe-manifest.json",
+        "examples/atlas_pack_sources/healthcare_clinical_source.safe.json",
+    ],
+)
+def test_advertised_safe_manifest_examples_pass_no_payload_validator(example_path):
+    data = json.loads(Path(example_path).read_text(encoding="utf-8"))
+
+    NoPayloadValidator().validate(data)
