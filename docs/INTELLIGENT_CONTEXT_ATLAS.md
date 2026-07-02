@@ -77,9 +77,9 @@ python -m atlas_pipeline.build_atlas \
 
 The action exposes only aggregate Atlas source counts in PR artifacts. It does not expose a seed row browser.
 
-The public alpha Atlas currently builds 65 source records: 3 global-core records, 8 Financial Services records, 38 baseline records covering the other 19 domains, and 16 additional priority-pack records for Healthcare/Clinical, Legal/Regulatory, IT/Software, and Pharma/Biotech.
+The public alpha Atlas currently builds 125 source records: 3 global-core records, 8 Financial Services records, and 114 records spread across the other 19 industry domains (6 each).
 
-Quality floor for the first public-alpha expansion packs: Financial Services, Healthcare/Clinical, Legal/Regulatory, IT/Software, and Pharma/Biotech each have at least six metadata-only structural sources. Financial Services is the first flagship deep-compliance deployment module. The remaining 15 domains have public-alpha baseline coverage and are ready for deeper private packs.
+Quality floor for all 20 industry domains: every domain has at least six metadata-only structural sources pulled from official public government, standards-body, regulator, public-data, or recognized industry reference sources. Financial Services is the first flagship deep-compliance deployment module with 8 sources; the remaining 19 domains each carry the baseline 6-source floor and are ready for deeper private packs. This baseline set is enforced in code — every record must pass `NoPayloadValidator`, the schema's metadata-only checks, and the build manifest's per-domain source-floor check before the build succeeds, so a domain cannot silently regress below the floor. Domains beyond Financial Services are registered and structurally complete, but have not yet received the deeper private-pack correlation/scoring work; the Atlas is honest about this distinction rather than presenting all domains as equally mature.
 
 ## Lifecycle Freshness
 

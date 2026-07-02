@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections import Counter
 from enum import StrEnum
 from typing import Any
 from urllib.parse import urlparse
@@ -10,7 +11,9 @@ from pydantic import Field, model_validator
 from ecl_trainer.core.exceptions import SovereignDataExfiltrationException
 from ecl_trainer.core.models import FrozenModel
 from ecl_trainer.core.policy import HEX_SHA256_RE, NoPayloadValidator, sha256_hex
-from ecl_trainer.oracle.domains import IndustryDomain
+from ecl_trainer.oracle.domains import TOP_20_DOMAINS, IndustryDomain
+
+PUBLIC_DOMAIN_SOURCE_FLOOR = 6
 
 URL_SECRET_SEGMENT_RE = re.compile(
     r"((?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{16,}|ghp_[A-Za-z0-9_]{16,}|xox[baprs]-[A-Za-z0-9-]{16,}|token|secret|apikey|api_key)",
@@ -92,6 +95,18 @@ class AtlasBuildManifest(FrozenModel):
     build_id: str
     atlas_version: str
     records: list[AtlasSourceRecord]
+
+    @model_validator(mode="after")
+    def enforce_public_domain_quality_floor(self):
+        domain_counts = Counter(record.domain_id for record in self.records if record.domain_id is not None)
+        below_floor = {
+            domain.value: domain_counts[domain]
+            for domain in TOP_20_DOMAINS
+            if domain_counts[domain] < PUBLIC_DOMAIN_SOURCE_FLOOR
+        }
+        if below_floor:
+            raise ValueError(f"Atlas source domain quality floor not met: {below_floor}")
+        return self
 
     @property
     def build_hash_sha256(self) -> str:

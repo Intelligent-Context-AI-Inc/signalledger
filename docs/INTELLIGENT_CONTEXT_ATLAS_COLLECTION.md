@@ -18,20 +18,16 @@ The output DuckDB file is a local runtime artifact. `Dockerfile.ecl-trainer` run
 
 - Global core: public open-science structural metadata families.
 - Financial Services: public taxonomy, regulatory category, and financial-system reference families.
-- Priority expansion packs: public structural evidence families for Healthcare/Clinical, Legal/Regulatory, IT/Software, and Pharma/Biotech.
-- Other top-20 domains: representative metadata-only public structural references used to exercise toggles, passport boundaries, and local build behavior.
+- Top-20 domain extensions: public structural evidence families for every registered industry domain, with Financial Services carrying the deepest first compliance pack.
 
-The public alpha build contains 65 source records total. This is enough to exercise top-20 toggles and passport boundaries locally, while still leaving richer proprietary domain rows out of public examples and source distributions.
+The public alpha build contains 125 source records total: 3 global-core records, 8 Financial Services records, and 114 records spread across the other 19 industry domains. This is enough to exercise top-20 toggles and passport boundaries locally, while still leaving richer proprietary scoring rows, correlation weights, and customer-specific overlay rows out of public examples and source distributions.
 
-Priority deep-pack quality floor:
+Public domain quality floor:
 
-- Financial Services: at least 6 structural sources.
-- Healthcare/Clinical: at least 6 structural sources.
-- Legal/Regulatory: at least 6 structural sources.
-- IT/Software: at least 6 structural sources.
-- Pharma/Biotech: at least 6 structural sources.
+- Every top-20 industry domain: at least 6 metadata-only structural sources.
+- Financial Services: 8 structural sources in the current public alpha.
 
-Financial Services remains the first flagship deep validator pack. Healthcare/Clinical, Legal/Regulatory, IT/Software, and Pharma/Biotech now have deeper public-alpha structural evidence and are ready for private overlay expansion.
+Financial Services remains the first flagship deep validator pack. The other 19 domains now have the enforced public structural floor and are ready for private overlay expansion. The build manifest rejects an Atlas build when any top-20 domain falls below the floor.
 
 ## Public/Private Boundary
 

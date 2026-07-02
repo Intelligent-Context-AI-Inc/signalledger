@@ -6,7 +6,7 @@ from pydantic import ValidationError
 
 from atlas_pipeline.build_atlas import build_atlas_from_sources
 from atlas_pipeline.collectors import CollectorRegistry, LocalManifestCollector
-from atlas_pipeline.schemas import AtlasSourceRecord
+from atlas_pipeline.schemas import PUBLIC_DOMAIN_SOURCE_FLOOR, AtlasBuildManifest, AtlasSourceRecord
 from ecl_trainer.core.policy import NoPayloadValidator
 from ecl_trainer.oracle.atlas import _EclInternalCore
 from ecl_trainer.oracle.domains import TOP_20_DOMAINS
@@ -49,29 +49,43 @@ def test_build_atlas_from_sources_appends_source_record_tables(tmp_path) -> None
     finally:
         connection.close()
 
-    assert source_count == 65
+    assert source_count == 125
     assert tag_count > source_count
     assert financial_count == 8
     assert lifecycle_count == 1
     assert len(manifest_hash) == 64
 
     summary = _EclInternalCore(atlas_path).atlas_source_summary()
-    assert summary["atlas_source_record_count"] == 65
+    assert summary["atlas_source_record_count"] == 125
     assert summary["atlas_financial_source_record_count"] == 8
     assert summary["atlas_global_core_source_record_count"] == 3
     assert summary["atlas_seeded_domain_count"] == 20
     assert set(summary["atlas_domain_source_counts"]) == {domain.value for domain in TOP_20_DOMAINS}
-    for priority_domain in {
-        "financial_services",
-        "healthcare_clinical",
-        "it_software",
-        "legal_regulatory",
-        "pharma_biotech",
-    }:
-        assert summary["atlas_domain_source_counts"][priority_domain] >= 6
-    assert summary["atlas_domain_source_counts"]["real_estate_proptech"] == 2
+    for domain in TOP_20_DOMAINS:
+        assert summary["atlas_domain_source_counts"][domain.value] >= PUBLIC_DOMAIN_SOURCE_FLOOR
     assert summary["atlas_source_family_counts"]["financial_taxonomy"] == 2
     NoPayloadValidator().validate(summary)
+
+
+def test_atlas_build_manifest_rejects_domain_floor_regression() -> None:
+    registry = CollectorRegistry()
+    registry.register(LocalManifestCollector("atlas_sources"))
+    target_domain = TOP_20_DOMAINS[-1]
+    target_seen = 0
+    records = []
+    for record in registry.collect():
+        if record.domain_id == target_domain:
+            target_seen += 1
+            if target_seen == PUBLIC_DOMAIN_SOURCE_FLOOR:
+                continue
+        records.append(record)
+
+    with pytest.raises(ValidationError, match="quality floor"):
+        AtlasBuildManifest(
+            build_id="metadata-only-public-seed-v1",
+            atlas_version="option-b-alpha.1",
+            records=records,
+        )
 
 
 def test_source_records_reject_long_non_hash_text() -> None:
@@ -129,7 +143,7 @@ def test_source_records_reject_token_like_url_path_segments() -> None:
                 "source_family": "open_science_dataset",
                 "source_name": "BadSource",
                 "source_version": "test",
-                "source_reference_uri": "https://example.test/token-sentinel-marker",
+                "source_reference_uri": "https://example.test/sk-live-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "global_core_relevance": True,
             }
         )
