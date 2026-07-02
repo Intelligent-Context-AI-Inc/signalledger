@@ -117,6 +117,7 @@ Private Atlas seed content and proprietary scoring assets are not included in th
 
 See:
 
+- `examples/successful_github_action_run/`
 - `examples/proof_artifact_gallery/`
 - `docs/ecl_learning_ledger/LANDING_PAGE_PROOF_KIT.md`
 - `docs/ecl_learning_ledger/GITHUB_ACTION_FIRST_RUN_UX.md`

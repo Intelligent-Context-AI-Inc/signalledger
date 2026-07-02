@@ -1,0 +1,31 @@
+name: SignalLedger End User Smoke
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  signalledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 2
+      - uses: Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan@v0.1.0-alpha.3
+        with:
+          project_namespace: ${{ github.repository }}
+          ledger_path: .ecl-trainer/events.jsonl
+          risk_policy: block_on_payload_violation
+          changed_only: "true"
+          post_pr_comment: "true"
+          upload_artifact: "true"
+          artifact_name: signalledger-smoke-artifacts
+          domain_selection_mode: explicit
+          enabled_domains: financial_services
+          ignore_staleness: "true"
