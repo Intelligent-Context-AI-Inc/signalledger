@@ -21,6 +21,65 @@ def default_atlas_path() -> Path:
     return Path(os.getenv("ECL_ATLAS_PATH", DEFAULT_ATLAS_PATH))
 
 
+def refresh_atlas_manifest(connection: duckdb.DuckDBPyConnection, *, pack_visibility: str) -> str:
+    build_hash, included_domain_packs = atlas_build_fingerprint(connection)
+    connection.execute(
+        "UPDATE atlas_manifest SET build_hash_sha256 = ?, included_domain_packs = ?, pack_visibility = ?",
+        [build_hash, included_domain_packs, pack_visibility],
+    )
+    return build_hash
+
+
+def atlas_build_fingerprint(connection: duckdb.DuckDBPyConnection) -> tuple[str, str]:
+    active_domain_rows = connection.execute(
+        "SELECT domain_id FROM domain_extension_manifest WHERE domain_status = ? ORDER BY domain_id",
+        [DomainExtensionStatus.ACTIVE.value],
+    ).fetchall()
+    active_domain_packs = [str(row[0]) for row in active_domain_rows]
+    source_reference_hashes = _source_reference_hashes(connection)
+    pattern_rows = connection.execute(
+        """
+        SELECT domain_id, pattern_id, category, risk_weight, target_key, target_value, action_required
+        FROM domain_patterns
+        ORDER BY domain_id, pattern_id
+        """
+    ).fetchall()
+    domain_patterns = [
+        {
+            "domain_id": row[0],
+            "pattern_id": row[1],
+            "category": row[2],
+            "risk_weight": float(row[3]),
+            "target_key": row[4],
+            "target_value": float(row[5]),
+            "action_required": row[6],
+        }
+        for row in pattern_rows
+    ]
+    payload = {
+        "active_domain_packs": active_domain_packs,
+        "source_reference_hashes_sha256": source_reference_hashes,
+        "domain_patterns": domain_patterns,
+    }
+    NoPayloadValidator().validate(payload)
+    return canonical_sha256(payload), ",".join(active_domain_packs)
+
+
+def _source_reference_hashes(connection: duckdb.DuckDBPyConnection) -> list[str]:
+    tables = {
+        str(row[0])
+        for row in connection.execute(
+            "SELECT table_name FROM information_schema.tables WHERE table_schema = 'main'"
+        ).fetchall()
+    }
+    if "atlas_source_records" not in tables:
+        return []
+    rows = connection.execute(
+        "SELECT source_reference_hash_sha256 FROM atlas_source_records ORDER BY source_reference_hash_sha256"
+    ).fetchall()
+    return [str(row[0]) for row in rows]
+
+
 def build_option_b_atlas(path: str | Path) -> Path:
     db_path = Path(path)
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -158,6 +217,23 @@ def build_option_b_atlas(path: str | Path) -> Path:
                 ),
             ],
         )
+        build_hash = refresh_atlas_manifest(connection, pack_visibility="public_alpha_fixture")
+        metadata_payload = {
+            "atlas_version_tag": DEFAULT_ATLAS_VERSION_TAG,
+            "compiled_at": DEFAULT_ATLAS_COMPILED_AT.isoformat(),
+            "supported_domains_mask": supported_domains_mask,
+            "build_hash_sha256": build_hash,
+        }
+        connection.execute("DELETE FROM ecl_atlas_metadata")
+        connection.execute(
+            "INSERT INTO ecl_atlas_metadata VALUES (?, ?, ?, ?)",
+            [
+                DEFAULT_ATLAS_VERSION_TAG,
+                DEFAULT_ATLAS_COMPILED_AT.replace(tzinfo=None),
+                supported_domains_mask,
+                canonical_sha256(metadata_payload),
+            ],
+        )
     finally:
         connection.close()
     return db_path
@@ -183,9 +259,18 @@ class _EclInternalCore:
             row = connection.execute(
                 "SELECT atlas_version, build_hash_sha256, included_domain_packs FROM atlas_manifest"
             ).fetchone()
+            runtime_build_hash, runtime_included_domain_packs = atlas_build_fingerprint(connection)
         if row is None:
             raise RuntimeError("Intelligent Context Atlas manifest is missing")
-        return canonical_sha256({"atlas_version": row[0], "build_hash_sha256": row[1], "included_domain_packs": row[2]})
+        return canonical_sha256(
+            {
+                "atlas_version": row[0],
+                "build_hash_sha256": row[1],
+                "included_domain_packs": row[2],
+                "runtime_build_hash_sha256": runtime_build_hash,
+                "runtime_included_domain_packs": runtime_included_domain_packs,
+            }
+        )
 
     def domain_statuses(self) -> dict[str, str]:
         with self._connect() as connection:

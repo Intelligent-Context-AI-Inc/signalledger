@@ -8,7 +8,7 @@ The Intelligent Context Atlas is the local Option B seed asset for ECL Learning 
 - Domain extensions: top-20 industry packs controlled by toggles.
 - Flagship deep domain: `financial_services`.
 - Global cross-industry telemetry tracks universal structural failure patterns across all top-20 enterprise domains.
-- Financial Services is the first deep active validator pack mapped to public financial taxonomy and regulatory evidence.
+- Financial Services is the first active public starter pack mapped to public financial taxonomy and regulatory evidence. Its public `domain_patterns` are provisional runtime fixtures, not calibrated production weights.
 - Healthcare/Clinical, Legal/Regulatory, IT/Software, and Pharma/Biotech are priority public-alpha expansion packs.
 - The remaining domains are registered public-alpha baseline packs and stay ready for deeper private overlays.
 - Public alpha seed records demonstrate metadata-only operation; private customer packs and richer matching rows are not exposed through public APIs or examples.
@@ -79,12 +79,12 @@ The action exposes only aggregate Atlas source counts in PR artifacts. It does n
 
 The public alpha Atlas currently builds 125 source records: 3 global-core records, 8 Financial Services records, and 114 records spread across the other 19 industry domains (6 each).
 
-Quality floor for all 20 industry domains: every domain has at least six metadata-only structural sources pulled from official public government, standards-body, regulator, public-data, or recognized industry reference sources. Financial Services is the first flagship deep-compliance deployment module with 8 sources; the remaining 19 domains each carry the baseline 6-source floor and are ready for deeper private packs. This baseline set is enforced in code — every record must pass `NoPayloadValidator`, the schema's metadata-only checks, and the build manifest's per-domain source-floor check before the build succeeds, so a domain cannot silently regress below the floor. Domains beyond Financial Services are registered and structurally complete, but have not yet received the deeper private-pack correlation/scoring work; the Atlas is honest about this distinction rather than presenting all domains as equally mature.
+Quality floor for all 20 industry domains: every domain has at least six metadata-only structural sources pulled from official public government, standards-body, regulator, public-data, or recognized industry reference sources. Financial Services is the first flagship public starter module with 8 sources; the remaining 19 domains each carry the baseline 6-source floor and are ready for deeper private packs. This baseline set is enforced in code — every record must pass `NoPayloadValidator`, the schema's metadata-only checks, and the build manifest's per-domain source-floor check before the build succeeds, so a domain cannot silently regress below the floor. Domains beyond Financial Services are registered and structurally complete, but have not yet received the deeper private-pack correlation/scoring work; the Atlas is honest about this distinction rather than presenting all domains as equally mature. See `docs/RISK_WEIGHT_METHODOLOGY.md` for the public fixture boundary.
 
 ## Lifecycle Freshness
 
-The Atlas includes an `ecl_atlas_metadata` birthmark with a version tag, UTC compile timestamp, supported-domain mask, and deterministic signature. `ecl-trainer lifecycle check` reads that local metadata and emits `lifecycle-report.json`; GitHub PR reports include the same status in the PR comment.
+The Atlas includes an `ecl_atlas_metadata` birthmark with a version tag, UTC compile timestamp, supported-domain mask, and deterministic metadata digest. `ecl-trainer lifecycle check` reads that local metadata and emits `lifecycle-report.json`; GitHub PR reports include the same status in the PR comment.
 
-Air-gapped updates use `ecl-trainer lifecycle apply-patch --patch-archive PATH`. Patch archives must be `.tar.gz` files with a signed metadata manifest, declared member hashes, allowlisted JSON members, and bounded operations only; arbitrary SQL and raw payload members are rejected.
+Air-gapped updates use `ecl-trainer lifecycle apply-patch --patch-archive PATH`. Patch archives must be `.tar.gz` files with an Ed25519 publisher-authenticated metadata manifest, declared member hashes, allowlisted JSON members, and bounded operations only; arbitrary SQL and raw payload members are rejected. Operators configure trusted publisher public keys through `ECL_PATCH_TRUSTED_PUBLIC_KEYS`.
 
 The lifecycle layer must remain local-only, metadata-only, non-blocking, and compatible with air-gapped deployment. The protocol details are tracked in `docs/DETERMINISTIC_FRESHNESS_PROTOCOL_PLAN.md`.

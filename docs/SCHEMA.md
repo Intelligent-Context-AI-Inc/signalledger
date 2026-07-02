@@ -34,11 +34,11 @@ The local ledger writes canonical JSONL in append mode. Each event hash is compu
 
 ## Atlas Lifecycle Report
 
-Records local Atlas freshness metadata only: atlas version tag, UTC compiled timestamp, active age in days, lifecycle status, domain enforcement messages, Atlas signature hash, and payload policy status. The report is non-blocking by default and never performs network freshness checks.
+Records local Atlas freshness metadata only: atlas version tag, UTC compiled timestamp, active age in days, lifecycle status, domain enforcement messages, Atlas metadata digest hash, and payload policy status. The report is non-blocking by default and never performs network freshness checks.
 
 ## Offline Patch Report
 
-Records explicit air-gapped Atlas patch application metadata: patch ID, patch manifest hash, new Atlas version tag, verified compile timestamp, Atlas signature hash, member hashes, operation count, record count, domain-status update count, and payload policy status. Patch reports do not include archive paths, SQL, raw source rows, raw documents, prompts, embeddings, token sequences, model weights, or raw diffs.
+Records explicit air-gapped Atlas patch application metadata: patch ID, patch manifest hash, Ed25519 publisher key ID, new Atlas version tag, verified compile timestamp, Atlas metadata digest hash, member hashes, operation count, record count, domain-status update count, and payload policy status. Patch application fails closed unless the publisher signature verifies against a locally configured trusted public key. Patch reports do not include archive paths, SQL, raw source rows, raw documents, prompts, embeddings, token sequences, model weights, or raw diffs.
 
 ## Corrections And Supersession
 

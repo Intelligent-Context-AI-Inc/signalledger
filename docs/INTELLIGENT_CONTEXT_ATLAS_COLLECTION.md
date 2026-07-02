@@ -27,7 +27,7 @@ Public domain quality floor:
 - Every top-20 industry domain: at least 6 metadata-only structural sources.
 - Financial Services: 8 structural sources in the current public alpha.
 
-Financial Services remains the first flagship deep validator pack. The other 19 domains now have the enforced public structural floor and are ready for private overlay expansion. The build manifest rejects an Atlas build when any top-20 domain falls below the floor.
+Financial Services remains the first active public starter pack. Its public `domain_patterns` rows are provisional fixtures for local runtime validation, not calibrated production risk weights. The other 19 domains now have the enforced public structural floor and are ready for private overlay expansion. The build manifest rejects an Atlas build when any top-20 domain falls below the floor.
 
 ## Public/Private Boundary
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import base64
 import json
+import os
 import posixpath
 import tarfile
 from datetime import UTC, datetime
@@ -9,19 +11,22 @@ from pathlib import Path
 from typing import Any, Literal
 
 import duckdb
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from pydantic import Field, field_validator, model_validator
 
 from atlas_pipeline.schemas import AtlasSourceRecord
 from ecl_trainer.core.models import FrozenModel
 from ecl_trainer.core.policy import HEX_SHA256_RE, NoPayloadValidator, sha256_hex
 from ecl_trainer.core.serialization import canonical_json, canonical_sha256
-from ecl_trainer.oracle.atlas import _EclInternalCore, ensure_atlas
+from ecl_trainer.oracle.atlas import _EclInternalCore, ensure_atlas, refresh_atlas_manifest
 from ecl_trainer.oracle.domains import DomainExtensionStatus, IndustryDomain
 
 MAX_PATCH_ARCHIVE_BYTES = 100 * 1024 * 1024
 MAX_PATCH_MEMBER_BYTES = 10 * 1024 * 1024
 PATCH_MANIFEST_MEMBER = "ecl_delta_manifest.json"
 ALLOWED_PATCH_PREFIXES = ("records/",)
+TRUSTED_PATCH_PUBLIC_KEYS_ENV = "ECL_PATCH_TRUSTED_PUBLIC_KEYS"
 
 
 class OfflinePatchStatus(StrEnum):
@@ -66,6 +71,9 @@ class OfflinePatchManifest(FrozenModel):
     compiled_at: datetime
     supported_domains_mask: int
     patch_signature_hash_sha256: str
+    signature_algorithm: Literal["ed25519"] = "ed25519"
+    publisher_key_id: str
+    publisher_signature_ed25519: str
     files: list[OfflinePatchFile] = Field(default_factory=list)
     operations: list[OfflinePatchOperation] = Field(default_factory=list)
 
@@ -89,6 +97,8 @@ class OfflinePatchApplyReport(FrozenModel):
     offline_patch_status: OfflinePatchStatus
     patch_id: str
     patch_manifest_hash_sha256: str
+    publisher_key_id: str
+    signature_algorithm: Literal["ed25519"] = "ed25519"
     new_atlas_version_tag: str
     compiled_at: datetime
     atlas_signature_hash_sha256: str
@@ -135,6 +145,7 @@ class OfflineSyncManager:
             offline_patch_status=OfflinePatchStatus.APPLIED,
             patch_id=manifest.patch_id,
             patch_manifest_hash_sha256=manifest_hash,
+            publisher_key_id=manifest.publisher_key_id,
             new_atlas_version_tag=manifest.new_atlas_version_tag,
             compiled_at=_as_utc(manifest.compiled_at),
             atlas_signature_hash_sha256=atlas_signature,
@@ -173,6 +184,7 @@ class OfflineSyncManager:
         expected_signature_hash = _patch_signature_hash(manifest_payload)
         if manifest_payload.get("patch_signature_hash_sha256") != expected_signature_hash:
             raise ValueError("offline patch manifest signature hash mismatch")
+        _verify_patch_publisher_signature(manifest_payload)
         manifest = OfflinePatchManifest.model_validate(manifest_payload)
         declared_hashes = {patch_file.member_path: patch_file.member_hash_sha256 for patch_file in manifest.files}
         for member_name, data in members.items():
@@ -263,23 +275,7 @@ class OfflineSyncManager:
         return updated
 
     def _recompute_manifest_hash(self, connection: duckdb.DuckDBPyConnection) -> str:
-        rows = connection.execute(
-            "SELECT source_reference_hash_sha256 FROM atlas_source_records ORDER BY source_reference_hash_sha256"
-        ).fetchall()
-        if rows:
-            build_hash = sha256_hex("|".join(str(row[0]) for row in rows))
-        else:
-            build_hash = canonical_sha256({"offline_patch": "no_source_records"})
-        active_rows = connection.execute(
-            "SELECT domain_id FROM domain_extension_manifest WHERE domain_status = ? ORDER BY domain_id",
-            [DomainExtensionStatus.ACTIVE.value],
-        ).fetchall()
-        included_domain_packs = ",".join(str(row[0]) for row in active_rows)
-        connection.execute(
-            "UPDATE atlas_manifest SET build_hash_sha256 = ?, included_domain_packs = ?, pack_visibility = ?",
-            [build_hash, included_domain_packs, "offline_metadata_patch"],
-        )
-        return build_hash
+        return refresh_atlas_manifest(connection, pack_visibility="offline_metadata_patch")
 
     def _write_lifecycle_metadata(
         self,
@@ -358,6 +354,43 @@ def _as_utc(value: datetime) -> datetime:
 
 
 def _patch_signature_hash(manifest: dict[str, Any]) -> str:
+    return sha256_hex(canonical_json(_patch_signature_payload(manifest)))
+
+
+def _patch_signature_payload(manifest: dict[str, Any]) -> dict[str, Any]:
     payload = dict(manifest)
     payload["patch_signature_hash_sha256"] = ""
-    return sha256_hex(canonical_json(payload))
+    payload["publisher_signature_ed25519"] = ""
+    return payload
+
+
+def _verify_patch_publisher_signature(manifest: dict[str, Any]) -> None:
+    if manifest.get("signature_algorithm") != "ed25519":
+        raise ValueError("offline patch manifest signature_algorithm must be ed25519")
+    key_id = manifest.get("publisher_key_id")
+    if not isinstance(key_id, str) or not key_id:
+        raise ValueError("offline patch manifest publisher_key_id is required")
+    signature = manifest.get("publisher_signature_ed25519")
+    if not isinstance(signature, str) or not signature:
+        raise ValueError("offline patch manifest publisher_signature_ed25519 is required")
+    trusted_keys = _trusted_patch_public_keys()
+    public_key_b64 = trusted_keys.get(key_id)
+    if public_key_b64 is None:
+        raise ValueError("offline patch publisher_key_id is not trusted")
+    try:
+        public_key_bytes = base64.b64decode(public_key_b64, validate=True)
+        signature_bytes = base64.b64decode(signature, validate=True)
+        public_key = Ed25519PublicKey.from_public_bytes(public_key_bytes)
+        public_key.verify(signature_bytes, canonical_json(_patch_signature_payload(manifest)).encode("utf-8"))
+    except (InvalidSignature, ValueError) as exc:
+        raise ValueError("offline patch publisher signature verification failed") from exc
+
+
+def _trusted_patch_public_keys() -> dict[str, str]:
+    raw = os.getenv(TRUSTED_PATCH_PUBLIC_KEYS_ENV)
+    if not raw:
+        raise ValueError("offline patch trusted public keys are not configured")
+    parsed = json.loads(raw)
+    if not isinstance(parsed, dict) or not parsed:
+        raise ValueError("offline patch trusted public keys must be a non-empty JSON object")
+    return {str(key): str(value) for key, value in parsed.items()}

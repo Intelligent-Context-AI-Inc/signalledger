@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import io
 import json
 import tarfile
@@ -7,13 +8,29 @@ from pathlib import Path
 
 import duckdb
 import pytest
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from typer.testing import CliRunner
 
 from ecl_trainer.cli import app
 from ecl_trainer.core.policy import NoPayloadValidator, sha256_hex
 from ecl_trainer.core.serialization import canonical_json
-from ecl_trainer.lifecycle.sync import OfflineSyncManager
+from ecl_trainer.lifecycle.sync import TRUSTED_PATCH_PUBLIC_KEYS_ENV, OfflineSyncManager
 from ecl_trainer.oracle.atlas import DEFAULT_ATLAS_VERSION_TAG, build_option_b_atlas
+
+_TEST_PATCH_KEY_ID = "test-offline-patch-key"
+_TEST_PRIVATE_KEY = Ed25519PrivateKey.generate()
+_TEST_PUBLIC_KEY_B64 = base64.b64encode(
+    _TEST_PRIVATE_KEY.public_key().public_bytes(
+        encoding=serialization.Encoding.Raw,
+        format=serialization.PublicFormat.Raw,
+    )
+).decode("ascii")
+
+
+@pytest.fixture(autouse=True)
+def trust_test_patch_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(TRUSTED_PATCH_PUBLIC_KEYS_ENV, json.dumps({_TEST_PATCH_KEY_ID: _TEST_PUBLIC_KEY_B64}))
 
 
 def test_offline_patch_applies_metadata_only_source_records(tmp_path) -> None:
@@ -25,6 +42,8 @@ def test_offline_patch_applies_metadata_only_source_records(tmp_path) -> None:
     assert report["offline_patch_status"] == "APPLIED"
     assert report["new_atlas_version_tag"] == "v0.1.0rc1-2026.Q4"
     assert report["applied_record_count"] == 1
+    assert report["publisher_key_id"] == _TEST_PATCH_KEY_ID
+    assert report["signature_algorithm"] == "ed25519"
     NoPayloadValidator().validate(report)
 
     connection = duckdb.connect(str(atlas_path), read_only=True)
@@ -84,6 +103,14 @@ def test_offline_patch_rejects_member_hash_mismatch(tmp_path) -> None:
         OfflineSyncManager(atlas_path).apply_patch(patch_path)
 
 
+def test_offline_patch_rejects_forged_publisher_signature(tmp_path) -> None:
+    atlas_path = build_option_b_atlas(tmp_path / "atlas.duckdb")
+    patch_path = _write_patch_archive(tmp_path / "bad-signature.tar.gz", forge_signature=True)
+
+    with pytest.raises(ValueError, match="publisher signature verification failed"):
+        OfflineSyncManager(atlas_path).apply_patch(patch_path)
+
+
 def test_offline_patch_rejects_payload_like_source_records(tmp_path) -> None:
     atlas_path = build_option_b_atlas(tmp_path / "atlas.duckdb")
     records = [_source_record() | {"raw_text": "blocked"}]
@@ -99,6 +126,7 @@ def _write_patch_archive(
     records: list[dict] | None = None,
     extra_members: dict[str, bytes] | None = None,
     corrupt_declared_hash: bool = False,
+    forge_signature: bool = False,
 ) -> Path:
     records_bytes = json.dumps(records or [_source_record()], sort_keys=True).encode("utf-8")
     declared_hash = "0" * 64 if corrupt_declared_hash else sha256_hex(records_bytes)
@@ -110,6 +138,9 @@ def _write_patch_archive(
         "compiled_at": "2026-09-30T00:00:00Z",
         "supported_domains_mask": (1 << 20) - 1,
         "patch_signature_hash_sha256": "",
+        "signature_algorithm": "ed25519",
+        "publisher_key_id": _TEST_PATCH_KEY_ID,
+        "publisher_signature_ed25519": "",
         "files": [
             {
                 "member_path": "records/source_records.json",
@@ -129,7 +160,9 @@ def _write_patch_archive(
             },
         ],
     }
-    manifest["patch_signature_hash_sha256"] = _signature_hash(manifest)
+    _sign_manifest(manifest)
+    if forge_signature:
+        manifest["publisher_signature_ed25519"] = base64.b64encode(b"0" * 64).decode("ascii")
     manifest_bytes = json.dumps(manifest, sort_keys=True).encode("utf-8")
 
     with tarfile.open(path, "w:gz") as archive:
@@ -162,7 +195,18 @@ def _source_record() -> dict:
     }
 
 
+def _sign_manifest(manifest: dict) -> None:
+    manifest["patch_signature_hash_sha256"] = _signature_hash(manifest)
+    signature = _TEST_PRIVATE_KEY.sign(canonical_json(_signature_payload(manifest)).encode("utf-8"))
+    manifest["publisher_signature_ed25519"] = base64.b64encode(signature).decode("ascii")
+
+
 def _signature_hash(manifest: dict) -> str:
+    return sha256_hex(canonical_json(_signature_payload(manifest)))
+
+
+def _signature_payload(manifest: dict) -> dict:
     payload = dict(manifest)
     payload["patch_signature_hash_sha256"] = ""
-    return sha256_hex(canonical_json(payload))
+    payload["publisher_signature_ed25519"] = ""
+    return payload

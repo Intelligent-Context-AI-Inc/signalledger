@@ -8,7 +8,8 @@ import duckdb
 from atlas_pipeline.collectors import CollectorRegistry, LocalManifestCollector
 from atlas_pipeline.schemas import AtlasBuildManifest, AtlasSourceRecord
 from ecl_trainer.core.policy import NoPayloadValidator
-from ecl_trainer.oracle.atlas import build_option_b_atlas
+from ecl_trainer.core.serialization import canonical_sha256
+from ecl_trainer.oracle.atlas import build_option_b_atlas, refresh_atlas_manifest
 
 
 def build_atlas_from_sources(*, sources_root: str | Path, output_path: str | Path) -> Path:
@@ -22,11 +23,11 @@ def build_atlas_from_sources(*, sources_root: str | Path, output_path: str | Pat
     )
     NoPayloadValidator().validate(manifest)
     path = build_option_b_atlas(output_path)
-    _append_source_records(path, records, manifest)
+    _append_source_records(path, records)
     return path
 
 
-def _append_source_records(path: Path, records: list[AtlasSourceRecord], manifest: AtlasBuildManifest) -> None:
+def _append_source_records(path: Path, records: list[AtlasSourceRecord]) -> None:
     connection = duckdb.connect(str(path))
     try:
         connection.execute(
@@ -90,7 +91,21 @@ def _append_source_records(path: Path, records: list[AtlasSourceRecord], manifes
                 tag_rows.append((record.record_id, "domain_taxonomy", value))
         if tag_rows:
             connection.executemany("INSERT INTO atlas_source_record_tags VALUES (?, ?, ?)", tag_rows)
-        connection.execute("UPDATE atlas_manifest SET build_hash_sha256 = ?", [manifest.build_hash_sha256])
+        build_hash = refresh_atlas_manifest(connection, pack_visibility="public_alpha_fixture")
+        lifecycle = connection.execute(
+            "SELECT atlas_version_tag, compiled_at, supported_domains_mask FROM ecl_atlas_metadata LIMIT 1"
+        ).fetchone()
+        if lifecycle is not None:
+            metadata_payload = {
+                "atlas_version_tag": lifecycle[0],
+                "compiled_at": lifecycle[1].isoformat(),
+                "supported_domains_mask": int(lifecycle[2]),
+                "build_hash_sha256": build_hash,
+            }
+            connection.execute(
+                "UPDATE ecl_atlas_metadata SET atlas_signature = ?",
+                [canonical_sha256(metadata_payload)],
+            )
     finally:
         connection.close()
 
