@@ -48,7 +48,7 @@ def resolve_domain_selection(
 
     active: list[IndustryDomain] = []
     for domain in selected:
-        if statuses.get(domain.value) in {DomainExtensionStatus.ACTIVE.value, DomainExtensionStatus.REGISTERED.value}:
+        if statuses.get(domain.value) == DomainExtensionStatus.ACTIVE.value:
             active.append(domain)
         else:
             skipped.append(domain)

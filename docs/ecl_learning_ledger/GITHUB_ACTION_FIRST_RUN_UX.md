@@ -63,7 +63,7 @@ Copy the sample from `examples/github_action/ecl-trainer.manifest.json`.
       "dataset_id": "fin_news_v2",
       "dataset_version": "2026Q1",
       "dataset_hash_sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
-      "schema_hash_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d4",
+      "schema_hash_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
       "source_family": "public_financial_metadata",
       "license_descriptor": "public_reference_metadata",
       "token_count_estimate": 1200000000,
