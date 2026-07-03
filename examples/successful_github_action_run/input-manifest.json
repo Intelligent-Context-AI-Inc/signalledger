@@ -1,9 +1,9 @@
 {
-  "project_namespace": "smoke-financial-model",
-  "industry_domain": "financial_services",
+  "project_namespace": "validation-org/financial-smoke",
+  "domain": "financial_services",
   "dataset_registry": [
     {
-      "dataset_id": "fin_news_v2",
+      "dataset_id": "validation_financial_metadata_smoke",
       "dataset_version": "2026Q1",
       "dataset_hash_sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
       "schema_hash_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
