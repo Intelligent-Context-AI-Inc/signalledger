@@ -1,22 +1,25 @@
 # Successful GitHub Action Run
 
-This folder captures a real successful GitHub-hosted run of the SignalLedger action from an end-user-style pull request.
+This folder captures the artifact bundle from a real successful GitHub-hosted run of the SignalLedger action on the public repository.
 
 ## Run Summary
 
-- Action version: `v0.1.0-alpha.3`
+- Source PR: `Intelligent-Context-AI-Inc/signalledger#1`
+- GitHub run: `28630471629`
 - Workflow: `workflow.yml`
 - Input manifest: `input-manifest.json`
-- GitHub run: `28607801331`
 - Result: `success`
 - Mode: local-only
 - SaaS account: not required
 - Dataset upload: not performed
 - Payload policy: passed
 - Ledger verification: valid
+- Oracle status: completed
+- Enabled domain: financial_services
+- Risk gate: ADMIT_WITH_WARNINGS
 - Atlas source records: 125
 
-The original smoke repository was private, so this folder stores the generated artifacts directly for public inspection.
+The Action uploaded these files as `ecl-trainer-local-report`. They are checked in here so visitors can inspect the proof even after GitHub artifact retention expires.
 
 ## What To Inspect
 
@@ -28,6 +31,8 @@ The original smoke repository was private, so this folder stores the generated a
 | `artifacts/reports/compliance-passport.md` | Local compliance-support passport. |
 | `artifacts/reports/verification.json` | Hash-chain verification result. |
 | `artifacts/reports/diff-free-pr-proof.json` | Evidence that raw diffs were not captured. |
+| `artifacts/reports/oracle-alerts.json` | Step-zero alert evidence from the local Atlas. |
+| `artifacts/reports/oracle-blueprint.json` | Step-zero curriculum blueprint metadata. |
 | `artifacts/reports/manifest.json` | Local artifact manifest and policy outcome. |
 | `artifacts/reports/supply-chain/` | Local supply-chain evidence generated with the run. |
 
