@@ -62,8 +62,9 @@ def test_auto_core_selects_financial_and_explicit_uses_public_seed_domain(tmp_pa
         enabled_domains="legal_regulatory",
         domain_selection_mode="explicit",
     ).generate_step_zero_blueprint([_financial_manifest()], {"release_readiness": 1.0})
-    assert legal["enabled_domains"] == [IndustryDomain.LEGAL_REGULATORY.value]
-    assert legal["skipped_domains"] == []
+    assert legal["enabled_domains"] == []
+    assert legal["skipped_domains"] == [IndustryDomain.LEGAL_REGULATORY.value]
+    assert legal["target_mixture_boundaries"] == {"structural_core_target": 1.0}
 
 
 def test_core_only_produces_no_domain_sections(tmp_path):
