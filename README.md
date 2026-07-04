@@ -6,6 +6,18 @@ It scans training-data and model-metadata PRs before GPU spend, blocks raw-paylo
 
 This repository contains the source-available alpha of `ecl-trainer`, the Python CLI/SDK and GitHub Action behind the local pre-flight workflow.
 
+## Where It Fits In AI CI/CD
+
+Traditional LLM release gates ask whether a candidate model, RAG pipeline, or
+agent behavior regressed.
+
+SignalLedger runs earlier. It asks whether the training-data, dataset metadata,
+or curriculum change is structurally risky before the candidate model exists.
+
+Use it alongside baseline evals, drift detection, shadow validation, and
+cost/latency gates. SignalLedger gives those later gates a local, hash-chained
+history of what changed upstream.
+
 ## What It Produces
 
 A run writes local artifacts only:
@@ -75,6 +87,8 @@ Recommended rollout:
 1. Start with `risk_policy: report_only`.
 2. Move to `risk_policy: warn` after the first few PRs.
 3. Use `block_on_payload_violation` when the team trusts the no-payload gate.
+4. Use `block_on_high_risk` only after the team has tuned and accepted the
+   structural risk signal.
 
 ## Local CLI Quickstart
 
@@ -117,8 +131,10 @@ Private Atlas seed content and proprietary scoring assets are not included in th
 
 See:
 
-- `examples/successful_github_action_run/`
 - `examples/proof_artifact_gallery/`
+- `docs/ecl_learning_ledger/huggingface_live_checks/`
+- `docs/ecl_learning_ledger/AI_CICD_RELEASE_GATE_POSITIONING.md`
+- `docs/ecl_learning_ledger/HUGGING_FACE_TEAM_PACKET.md`
 - `docs/ecl_learning_ledger/LANDING_PAGE_PROOF_KIT.md`
 - `docs/ecl_learning_ledger/GITHUB_ACTION_FIRST_RUN_UX.md`
 - `docs/security/ecl_learning_ledger/ENTERPRISE_SECURITY_REVIEW_PACKET.md`
