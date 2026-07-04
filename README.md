@@ -27,6 +27,8 @@ A run writes local artifacts only:
 - `.ecl-trainer/reports/compliance-passport.md`: compliance-support evidence.
 - `.ecl-trainer/reports/verification.json`: hash-chain verification.
 - `.ecl-trainer/reports/pr-comment.md`: PR-ready reviewer summary.
+- `.ecl-trainer/reports/mlops-governance-pack.md`: MLOps release-readiness summary.
+- `.ecl-trainer/reports/catalog-drift-snapshot.json`: metadata/catalog drift snapshot.
 
 No SaaS account is required for the default workflow.
 
@@ -80,6 +82,7 @@ jobs:
           upload_artifact: 'true'
           domain_selection_mode: auto
           enabled_domains: ''
+          generate_mlops_pack: 'true'
           report_usage: 'false'
 ```
 
@@ -90,6 +93,8 @@ Recommended rollout:
 3. Use `block_on_payload_violation` when the team trusts the no-payload gate.
 4. Use `block_on_high_risk` only after the team has tuned and accepted the
    structural risk signal.
+5. Use `block_on_release_risk` when teams want the MLOps governance pack to
+   block only hard release-readiness failures.
 
 ## Local CLI Quickstart
 
@@ -114,6 +119,7 @@ First-run diagnostics:
 ecl-trainer doctor github-action
 ecl-trainer atlas-pack status
 ecl-trainer artifact-viewer build
+ecl-trainer mlops-pack build
 ```
 
 ## Intelligent Context Atlas
@@ -138,6 +144,7 @@ See:
 - `docs/ecl_learning_ledger/HUGGING_FACE_TEAM_PACKET.md`
 - `docs/ecl_learning_ledger/LANDING_PAGE_PROOF_KIT.md`
 - `docs/ecl_learning_ledger/GITHUB_ACTION_FIRST_RUN_UX.md`
+- `docs/ecl_learning_ledger/MLOPS_GOVERNANCE_PACK.md`
 - `docs/ADOPTION_TRACKING.md`
 - `docs/security/ecl_learning_ledger/ENTERPRISE_SECURITY_REVIEW_PACKET.md`
 

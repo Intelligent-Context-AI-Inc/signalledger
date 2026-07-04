@@ -33,6 +33,7 @@ steps:
       domain_selection_mode: auto
       enabled_domains: ""
       ignore_staleness: "false"
+      generate_mlops_pack: "true"
       report_usage: "false"
 ```
 
@@ -52,6 +53,8 @@ Job summaries and local artifacts work with read-only repository permissions. St
 - `warn`: produce report and warnings without failing.
 - `block_on_high_risk`: fail on high-risk metadata findings.
 - `block_on_payload_violation`: fail on No-Payload Policy violation.
+- `block_on_release_risk`: fail only when payload policy fails, hash-chain
+  verification fails, or MLOps readiness is `block`.
 
 ## Intelligent Context Atlas Toggles
 
@@ -81,6 +84,9 @@ The action writes a job summary, uploads metadata-only artifacts, and can post a
 - `pr-comment.md`
 - `verification.json`
 - `lifecycle-report.json`
+- `mlops-governance-pack.json`
+- `mlops-governance-pack.md`
+- `catalog-drift-snapshot.json`
 - aggregate Intelligent Context Atlas source counts in `manifest.json` and the PR comment
 - `supply-chain/supply-chain-sbom.json`
 - `supply-chain/supply-chain-provenance.json`

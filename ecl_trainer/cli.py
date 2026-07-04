@@ -33,6 +33,7 @@ from ecl_trainer.governance import (
 from ecl_trainer.hub.huggingface_cards import HuggingFaceCardExporter
 from ecl_trainer.lifecycle.freshness import AtlasFreshnessValidator
 from ecl_trainer.lifecycle.sync import OfflineSyncManager
+from ecl_trainer.mlops_pack import MLOpsGovernancePackBuilder
 from ecl_trainer.oracle.blueprint import CurriculumBlueprintOracle
 from ecl_trainer.oracle.passport import RegulatoryPassportCompiler
 from ecl_trainer.oracle.shield import EclPreFlightShield
@@ -46,11 +47,13 @@ lifecycle_app = typer.Typer(no_args_is_help=True)
 doctor_app = typer.Typer(no_args_is_help=True)
 atlas_pack_app = typer.Typer(no_args_is_help=True)
 artifact_app = typer.Typer(no_args_is_help=True)
+mlops_pack_app = typer.Typer(no_args_is_help=True)
 app.add_typer(oracle_app, name="oracle")
 app.add_typer(lifecycle_app, name="lifecycle")
 app.add_typer(doctor_app, name="doctor")
 app.add_typer(atlas_pack_app, name="atlas-pack")
 app.add_typer(artifact_app, name="artifact-viewer")
+app.add_typer(mlops_pack_app, name="mlops-pack")
 
 
 def _load_mapping(path: str) -> dict:
@@ -134,6 +137,9 @@ def github_pr_report(
     enabled_domains: str = "",
     domain_selection_mode: str = "auto",
     ignore_staleness: bool = False,
+    generate_mlops_pack: bool = True,
+    previous_pack: str | None = None,
+    catalog_check_json: str | None = None,
 ) -> None:
     manifest = LocalCIArtifactGenerator().generate(
         project_namespace=project_namespace,
@@ -144,6 +150,9 @@ def github_pr_report(
         enabled_domains=_domain_args(domain, enabled_domains),
         domain_selection_mode=domain_selection_mode,
         ignore_staleness=ignore_staleness,
+        generate_mlops_pack=generate_mlops_pack,
+        previous_pack=previous_pack,
+        catalog_check_json=catalog_check_json,
     )
     typer.echo(canonical_json(manifest))
     raise typer.Exit(1 if manifest["should_fail"] else 0)
@@ -510,6 +519,25 @@ def artifact_viewer_build(
 ) -> None:
     result = ArtifactViewer().build(reports_dir=reports_dir, ledger_path=ledger_path, output=output)
     typer.echo(canonical_json(result))
+
+
+@mlops_pack_app.command("build")
+def mlops_pack_build(
+    reports_dir: str = ".ecl-trainer/reports",
+    ledger_path: str = ".ecl-trainer/events.jsonl",
+    output_dir: str = ".ecl-trainer/reports",
+    previous_pack: str | None = None,
+    catalog_check_json: str | None = None,
+) -> None:
+    result = MLOpsGovernancePackBuilder().build(
+        reports_dir=reports_dir,
+        ledger_path=ledger_path,
+        output_dir=output_dir,
+        previous_pack=previous_pack,
+        catalog_check_json=catalog_check_json,
+    )
+    safe_paths = {name: Path(path).name for name, path in result["paths"].items()}
+    typer.echo(canonical_json(safe_paths))
 
 
 @app.command("trial-bundle")

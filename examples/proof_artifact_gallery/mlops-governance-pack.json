@@ -1,0 +1,68 @@
+{
+  "atlas_lifecycle_status": "CURRENT",
+  "catalog_drift_snapshot": {
+    "catalog_gap_count": 2,
+    "current_readiness_status": "watch",
+    "current_release_readiness_score": 75,
+    "evidence_file_regression": false,
+    "generated_at_utc": "2026-07-04T00:00:00Z",
+    "lifecycle_regression": false,
+    "new_catalog_gap_indicators": [
+      "EVAL_METADATA_GAP",
+      "TRAINING_DATA_PROVENANCE_GAP"
+    ],
+    "previous_pack_available": true,
+    "previous_readiness_status": "pass",
+    "previous_release_readiness_score": 85,
+    "regression_reasons": [
+      "catalog_gap_regressed",
+      "release_readiness_score_regressed"
+    ],
+    "removed_catalog_gap_indicators": [],
+    "risk_gate_regression": false,
+    "schema": "signalledger_catalog_drift_snapshot_v1",
+    "score_delta": -10,
+    "trend": "regressed"
+  },
+  "catalog_entry_count": 2,
+  "catalog_entry_fingerprints_sha256": [
+    "01319d97e6c5dd4e6c7273ae0441d5b2b0b7627ba93ca06c12cc269cad4cae33",
+    "fb8edeec7e6c759dd70dfe10c6531e695b8e79e3e69dee76f881cab3ecfe3eb0"
+  ],
+  "catalog_gap_count": 2,
+  "catalog_gap_indicators": [
+    "EVAL_METADATA_GAP",
+    "TRAINING_DATA_PROVENANCE_GAP"
+  ],
+  "catalog_status": "provided",
+  "compliance_passport_status": "present_valid",
+  "dataset_upload_executed": false,
+  "evidence_file_statuses": {
+    "compliance_passport": "present",
+    "pr_comment": "present",
+    "risk_report": "present",
+    "supply_chain_manifest": "present",
+    "verification": "present"
+  },
+  "generated_at_utc": "2026-07-04T00:00:00Z",
+  "hash_chain_event_count": 5,
+  "hash_chain_status": "valid",
+  "ledger_reference_hash_sha256": "1d54bd373bfac2d956213d6c38274561d5ccbeb671ebdf37d04ef90fb297c0e8",
+  "local_only_execution": true,
+  "mlops_governance_pack_hash_sha256": "8ecf05270ed38c493385a56ce8f6d4d66b09e4eb0a9f0af2483bf535432a67c5",
+  "payload_policy": "passed",
+  "policy_mode": "public_coarse_readiness_heuristic",
+  "private_atlas_scoring_exposure": "not_exposed",
+  "readiness_deductions": [
+    "catalog_eval_metadata_gap",
+    "catalog_training_data_provenance_gap",
+    "risk_gate_warnings"
+  ],
+  "readiness_status": "watch",
+  "release_readiness_score": 75,
+  "reports_dir_hash_sha256": "6c3b148b3034a9168f11ad36d6ac0cb6d13d6fd2f4f98f39b38491f4f828db59",
+  "retention_status": "not_retained",
+  "risk_gate_status": "ADMIT_WITH_WARNINGS",
+  "schema": "signalledger_mlops_governance_pack_v1",
+  "supply_chain_evidence_status": "generated"
+}

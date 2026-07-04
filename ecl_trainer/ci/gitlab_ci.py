@@ -7,6 +7,7 @@ from ecl_trainer.ci.reporting import CIReportRenderer
 from ecl_trainer.ci.scanner import CIScanner
 from ecl_trainer.core.exceptions import PayloadExfiltrationException
 from ecl_trainer.core.policy import NoPayloadValidator
+from ecl_trainer.mlops_pack import should_block_release_risk
 
 
 class GitLabCIRunner:
@@ -49,4 +50,6 @@ class GitLabCIRunner:
             return report.get("payload_policy") == "failed"
         if risk_policy == "block_on_high_risk":
             return report.get("risk_summary", {}).get("status") == "high_risk"
+        if risk_policy == "block_on_release_risk":
+            return should_block_release_risk(report)
         return False

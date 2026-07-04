@@ -1,0 +1,24 @@
+{
+  "catalog_gap_count": 2,
+  "current_readiness_status": "watch",
+  "current_release_readiness_score": 75,
+  "evidence_file_regression": false,
+  "generated_at_utc": "2026-07-04T00:00:00Z",
+  "lifecycle_regression": false,
+  "new_catalog_gap_indicators": [
+    "EVAL_METADATA_GAP",
+    "TRAINING_DATA_PROVENANCE_GAP"
+  ],
+  "previous_pack_available": true,
+  "previous_readiness_status": "pass",
+  "previous_release_readiness_score": 85,
+  "regression_reasons": [
+    "catalog_gap_regressed",
+    "release_readiness_score_regressed"
+  ],
+  "removed_catalog_gap_indicators": [],
+  "risk_gate_regression": false,
+  "schema": "signalledger_catalog_drift_snapshot_v1",
+  "score_delta": -10,
+  "trend": "regressed"
+}

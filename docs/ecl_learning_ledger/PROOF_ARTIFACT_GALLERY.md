@@ -14,6 +14,9 @@ The examples are safe for demos. They contain hashes, counts, controlled tags, a
 | Verification file | `examples/proof_artifact_gallery/verification.json` | Hash-chain continuity result |
 | PR comment | `examples/proof_artifact_gallery/pr-comment.md` | Sticky comment body for GitHub PRs |
 | Auditor evidence manifest | `examples/proof_artifact_gallery/auditor-evidence-manifest.json` | Bundle index for security and audit review |
+| MLOps governance pack | `examples/proof_artifact_gallery/mlops-governance-pack.md` | Local release-readiness summary |
+| MLOps governance pack JSON | `examples/proof_artifact_gallery/mlops-governance-pack.json` | Machine-readable readiness artifact |
+| Catalog drift snapshot | `examples/proof_artifact_gallery/catalog-drift-snapshot.json` | Metadata/catalog trend summary |
 
 ## Buyer Talking Point
 
@@ -29,5 +32,8 @@ ECL turns a training-data PR into a local evidence bundle. A reviewer does not n
     compliance-passport.md
     verification.json
     pr-comment.md
+    mlops-governance-pack.md
+    mlops-governance-pack.json
+    catalog-drift-snapshot.json
     auditor-evidence-manifest.json
 ```

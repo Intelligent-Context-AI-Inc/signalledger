@@ -9,6 +9,8 @@ def test_github_action_runner_policy_decisions():
     runner = GitHubActionRunner()
     assert runner.should_fail({"risk_summary": {"status": "high_risk"}}, "block_on_high_risk") is True
     assert runner.should_fail({"payload_policy": "failed"}, "block_on_payload_violation") is True
+    assert runner.should_fail({"mlops_readiness_status": "block"}, "block_on_release_risk") is True
+    assert runner.should_fail({"mlops_readiness_status": "watch"}, "block_on_release_risk") is False
     assert runner.should_fail({"risk_summary": {"status": "high_risk"}}, "report_only") is False
 
 
@@ -16,6 +18,7 @@ def test_gitlab_runner_policy_decisions():
     runner = GitLabCIRunner()
     assert runner.should_fail({"risk_summary": {"status": "high_risk"}}, "block_on_high_risk") is True
     assert runner.should_fail({"payload_policy": "failed"}, "block_on_payload_violation") is True
+    assert runner.should_fail({"readiness_status": "block"}, "block_on_release_risk") is True
     assert runner.should_fail({"risk_summary": {"status": "high_risk"}}, "warn") is False
 
 
@@ -54,6 +57,9 @@ def test_github_action_runner_reports_payload_policy_failure(tmp_path, monkeypat
 def test_github_action_fail_on_payload_violation_input_is_wired():
     action = Path(".github/actions/ecl-trainer-scan/action.yml").read_text(encoding="utf-8")
     assert "inputs.fail_on_payload_violation" in action
+    assert "generate_mlops_pack:" in action
+    assert "default: 'true'" in action
+    assert "block_on_release_risk" in action
 
 
 def test_github_action_usage_ping_is_opt_in_and_metadata_only():
