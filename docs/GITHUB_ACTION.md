@@ -33,6 +33,7 @@ steps:
       domain_selection_mode: auto
       enabled_domains: ""
       ignore_staleness: "false"
+      report_usage: "false"
 ```
 
 Enterprise runner note: the Dockerized scanner maps the GitHub workspace into the
@@ -89,3 +90,24 @@ The action writes a job summary, uploads metadata-only artifacts, and can post a
 - the local append-only ledger
 
 Every rendered file is validated before it is written. Reports contain hashes and summaries, never raw diffs, dataset rows, prompts, token sequences, embeddings, or model weights.
+
+## Adoption Tracking
+
+The action is local-first and does not phone home by default.
+
+Optional metadata-only adoption pings are available for teams that want support
+or want to be counted in ecosystem usage:
+
+```yaml
+with:
+  report_usage: "true"
+  usage_ping_url: ${{ secrets.SIGNALLEDGER_USAGE_PING_URL }}
+  include_repository_name_in_usage: "false"
+```
+
+When enabled, the action writes `usage-ping.json` into the local artifact bundle.
+It sends that JSON only when `usage_ping_url` is set. Repository name is excluded
+unless `include_repository_name_in_usage` is explicitly set to `"true"`.
+
+See `docs/ADOPTION_TRACKING.md` for the public used-by signal, optional usage
+ping schema, and public code-search tracking workflow.

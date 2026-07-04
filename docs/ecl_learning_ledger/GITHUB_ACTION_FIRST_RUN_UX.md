@@ -46,6 +46,7 @@ jobs:
           domain_selection_mode: auto
           enabled_domains: ""
           fail_on_payload_violation: "true"
+          report_usage: "false"
 ```
 
 For external repositories consuming a released action, replace `./.github/actions/ecl-trainer-scan` with the published action reference.
@@ -122,3 +123,19 @@ The comment should show:
 - Artifact bundle contains `risk-report.md`, `compliance-passport.md`, `verification.json`, `pr-comment.md`, and `events.jsonl`.
 - `verification.json` reports `"valid": true`.
 - The manifest says `"mode": "local-only"` and `"payload_policy": "passed"`.
+
+## Optional Adoption Signal
+
+SignalLedger does not phone home by default. To opt in to a metadata-only
+adoption ping, add:
+
+```yaml
+report_usage: "true"
+usage_ping_url: ${{ secrets.SIGNALLEDGER_USAGE_PING_URL }}
+include_repository_name_in_usage: "false"
+```
+
+The ping is written locally as `usage-ping.json` and is sent only when
+`usage_ping_url` is configured. It does not include raw paths, diffs, datasets,
+prompts, completions, embeddings, token sequences, model weights, secrets, or
+customer data.

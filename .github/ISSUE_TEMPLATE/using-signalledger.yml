@@ -1,0 +1,57 @@
+name: Using SignalLedger
+description: Share a public adoption signal for SignalLedger / ECL Trainer.
+title: "[Used by]: "
+labels: ["used-by", "adoption"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for using SignalLedger. Please share only public, non-sensitive information.
+        Do not include private repository names, datasets, prompts, completions, embeddings,
+        token sequences, model weights, customer names, secrets, or raw payloads.
+  - type: input
+    id: organization
+    attributes:
+      label: Organization or project
+      description: Public name only. Use "private adopter" if you prefer not to disclose.
+      placeholder: Example AI Lab
+    validations:
+      required: true
+  - type: dropdown
+    id: usage
+    attributes:
+      label: Usage type
+      options:
+        - GitHub Action
+        - Local CLI
+        - Hugging Face callback/card export
+        - Evaluation / pilot
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: visibility
+    attributes:
+      label: Repository visibility
+      options:
+        - Public
+        - Private
+        - Mixed
+        - Prefer not to say
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What did SignalLedger help with?
+      description: Keep this metadata-only and public-safe.
+      placeholder: We used report_only mode to review training metadata PRs before GPU spend.
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: Intelligent Context AI may list this public issue as an adoption signal.
+          required: true
