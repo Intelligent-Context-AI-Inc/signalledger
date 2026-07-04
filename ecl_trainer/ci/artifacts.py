@@ -23,6 +23,7 @@ from ecl_trainer.core.policy import NoPayloadValidator, sha256_hex, validate_ren
 from ecl_trainer.core.serialization import canonical_json, canonical_sha256
 from ecl_trainer.governance import RiskGateDecisionRecorder, RiskScoreProcessor
 from ecl_trainer.lifecycle.freshness import AtlasFreshnessValidator
+from ecl_trainer.mlops_pack import MLOpsGovernancePackBuilder
 from ecl_trainer.oracle.atlas import _EclInternalCore
 from ecl_trainer.oracle.blueprint import CurriculumBlueprintOracle
 from ecl_trainer.oracle.passport import RegulatoryPassportCompiler
@@ -49,6 +50,9 @@ class LocalCIArtifactGenerator:
         enabled_domains: str = "",
         domain_selection_mode: str = "auto",
         ignore_staleness: bool = False,
+        generate_mlops_pack: bool = True,
+        previous_pack: str | Path | None = None,
+        catalog_check_json: str | Path | None = None,
     ) -> dict[str, Any]:
         ledger = Path(ledger_path)
         out = Path(output_dir)
@@ -104,15 +108,6 @@ class LocalCIArtifactGenerator:
 
         renderer = CIReportRenderer()
         risk_markdown = self.render_risk_report(report, oracle, scorecard)
-        verification_for_comment = HashChainVerifier(ledger).verify()
-        comment_markdown = self.render_pr_comment(
-            risk_markdown=risk_markdown,
-            passport_markdown=passport_markdown,
-            verification=verification_for_comment,
-            oracle=oracle,
-            supply_chain=supply_chain_paths,
-            lifecycle=lifecycle,
-        )
 
         paths = {
             "risk_report_markdown": out / "risk-report.md",
@@ -128,7 +123,6 @@ class LocalCIArtifactGenerator:
         paths["risk_report_json"].write_text(renderer.render_json(report), encoding="utf-8")
         paths["compliance_passport_markdown"].write_text(passport_markdown, encoding="utf-8")
         paths["compliance_passport_json"].write_text(canonical_json(passport), encoding="utf-8")
-        paths["pr_comment_markdown"].write_text(comment_markdown, encoding="utf-8")
         paths["lifecycle_report_json"].write_text(canonical_json(lifecycle), encoding="utf-8")
         diff_free_proof = self._build_diff_free_pr_proof(report)
         paths["diff_free_pr_proof_json"].write_text(canonical_json(diff_free_proof), encoding="utf-8")
@@ -148,11 +142,35 @@ class LocalCIArtifactGenerator:
                 for name, filename in supply_chain_paths.items()
             }
         )
+        verification_for_pack = HashChainVerifier(ledger).verify()
+        paths["verification_json"].write_text(canonical_json(verification_for_pack), encoding="utf-8")
+        mlops_pack: dict[str, Any] | None = None
+        if generate_mlops_pack:
+            mlops_result = MLOpsGovernancePackBuilder().build(
+                reports_dir=out,
+                ledger_path=ledger,
+                output_dir=out,
+                previous_pack=previous_pack,
+                catalog_check_json=catalog_check_json,
+            )
+            mlops_pack = mlops_result["pack"]
+            paths.update(mlops_result["paths"])
+
+        comment_markdown = self.render_pr_comment(
+            risk_markdown=risk_markdown,
+            passport_markdown=passport_markdown,
+            verification=verification_for_pack,
+            oracle=oracle,
+            supply_chain=supply_chain_paths,
+            lifecycle=lifecycle,
+            mlops_pack=mlops_pack,
+        )
+        paths["pr_comment_markdown"].write_text(comment_markdown, encoding="utf-8")
         self._append_artifact_export_event(
             ledger_path=ledger,
             project_namespace=project_namespace,
             paths={name: path for name, path in paths.items() if name != "verification_json"},
-            verification=verification_for_comment,
+            verification=verification_for_pack,
         )
         verification = HashChainVerifier(ledger).verify()
         paths["verification_json"].write_text(canonical_json(verification), encoding="utf-8")
@@ -160,7 +178,6 @@ class LocalCIArtifactGenerator:
         manifest = {
             "project_namespace": project_namespace,
             "risk_policy": risk_policy,
-            "should_fail": report["should_fail"],
             "output_files": {name: str(path) for name, path in paths.items()},
             "ledger": str(ledger),
             "mode": "local-only",
@@ -176,7 +193,11 @@ class LocalCIArtifactGenerator:
             "risk_scorecard_hash_sha256": canonical_sha256(scorecard),
             "risk_gate_event_hash_sha256": risk_gate_event["event_hash_sha256"],
             "diff_free_pr_event_hash_sha256": diff_proof_event["event_hash_sha256"],
+            "mlops_pack_status": "generated" if mlops_pack else "not_generated",
+            "mlops_readiness_status": mlops_pack["readiness_status"] if mlops_pack else "not_generated",
+            "mlops_release_readiness_score": mlops_pack["release_readiness_score"] if mlops_pack else 0,
         }
+        manifest["should_fail"] = GitHubActionRunner().should_fail(manifest, risk_policy)
         NoPayloadValidator().validate(manifest)
         (out / "manifest.json").write_text(canonical_json(manifest), encoding="utf-8")
         return manifest
@@ -190,6 +211,7 @@ class LocalCIArtifactGenerator:
         oracle: dict[str, Any] | None = None,
         supply_chain: dict[str, str] | None = None,
         lifecycle: dict[str, Any] | None = None,
+        mlops_pack: dict[str, Any] | None = None,
     ) -> str:
         oracle = oracle or {"oracle_status": "skipped_no_manifest"}
         supply_chain = supply_chain or {}
@@ -207,6 +229,16 @@ class LocalCIArtifactGenerator:
             f"- Atlas seeded domains: `{oracle.get('atlas_seeded_domain_count', 0)}`",
             "",
         ]
+        mlops_lines = ["### MLOps Governance Pack", "- Status: `not_generated`", ""]
+        if mlops_pack:
+            mlops_lines = [
+                "### MLOps Governance Pack",
+                f"- Readiness: `{mlops_pack['readiness_status']}`",
+                f"- Release readiness score: `{mlops_pack['release_readiness_score']}`",
+                f"- Catalog gap count: `{mlops_pack['catalog_gap_count']}`",
+                f"- Drift trend: `{mlops_pack.get('catalog_drift_snapshot', {}).get('trend', 'unchanged')}`",
+                "",
+            ]
         body = "\n".join(
             [
                 PR_COMMENT_MARKER,
@@ -224,6 +256,8 @@ class LocalCIArtifactGenerator:
                 "",
                 *oracle_lines,
                 lifecycle_block,
+                "",
+                *mlops_lines,
             ]
         )
         self._validate_rendered_markdown(body)

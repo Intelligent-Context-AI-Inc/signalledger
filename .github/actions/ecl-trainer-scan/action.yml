@@ -11,7 +11,7 @@ inputs:
   risk_policy:
     required: false
     default: report_only
-    description: report_only, warn, block_on_high_risk, or block_on_payload_violation
+    description: report_only, warn, block_on_high_risk, block_on_payload_violation, or block_on_release_risk
   changed_only:
     required: false
     default: 'true'
@@ -44,6 +44,10 @@ inputs:
     required: false
     default: 'false'
     description: Mute non-blocking Atlas lifecycle staleness warnings
+  generate_mlops_pack:
+    required: false
+    default: 'true'
+    description: Generate the local MLOps governance pack artifacts
   saas_endpoint:
     required: false
     default: ''
@@ -95,6 +99,10 @@ runs:
         if [[ "${{ inputs.ignore_staleness }}" == "true" ]]; then
           staleness_flag=(--ignore-staleness)
         fi
+        mlops_pack_flag="--generate-mlops-pack"
+        if [[ "${{ inputs.generate_mlops_pack }}" != "true" ]]; then
+          mlops_pack_flag="--no-generate-mlops-pack"
+        fi
         event_mount=()
         if [[ -n "${GITHUB_EVENT_PATH:-}" && -f "${GITHUB_EVENT_PATH}" ]]; then
           event_mount=(-v "${GITHUB_EVENT_PATH}:/github/event.json:ro" -e GITHUB_EVENT_PATH=/github/event.json)
@@ -119,6 +127,7 @@ runs:
           --enabled-domains "${{ inputs.enabled_domains }}" \
           --domain-selection-mode "${{ inputs.domain_selection_mode }}" \
           "${staleness_flag[@]}" \
+          "${mlops_pack_flag}" \
           "${changed_flag}"
         echo "$?" > "${{ inputs.output_dir }}/exit-code"
         exit 0

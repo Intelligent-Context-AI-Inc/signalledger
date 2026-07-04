@@ -30,12 +30,18 @@ def test_local_ci_artifact_generator_writes_metadata_only_reports(tmp_path, monk
     assert Path(manifest["output_files"]["supply_chain_sbom_json"]).exists()
     assert Path(manifest["output_files"]["supply_chain_provenance_json"]).exists()
     assert Path(manifest["output_files"]["supply_chain_manifest_json"]).exists()
+    assert Path(manifest["output_files"]["mlops_governance_pack_json"]).exists()
+    assert Path(manifest["output_files"]["mlops_governance_pack_markdown"]).exists()
+    assert Path(manifest["output_files"]["catalog_drift_snapshot_json"]).exists()
+    assert manifest["mlops_pack_status"] == "generated"
+    assert manifest["mlops_readiness_status"] in {"pass", "watch", "review_recommended", "block"}
     comment = Path(manifest["output_files"]["pr_comment_markdown"]).read_text(encoding="utf-8")
     assert "Local Compliance Passport" in comment
     assert "Atlas source records" in comment
     assert "Atlas seeded domains" in comment
     assert "Atlas Lifecycle" in comment
     assert "Supply-chain evidence: `generated`" in comment
+    assert "MLOps Governance Pack" in comment
     for line in comment.splitlines():
         NoPayloadValidator().validate({"rendered_markdown_segment": line})
     events = [
@@ -81,6 +87,7 @@ def test_github_pr_report_cli_generates_local_manifest(tmp_path, monkeypatch):
     assert "lifecycle_status" in manifest
     assert Path(".ecl/reports/compliance-passport.md").exists()
     assert Path(".ecl/reports/lifecycle-report.json").exists()
+    assert Path(".ecl/reports/mlops-governance-pack.json").exists()
     assert Path(".ecl/reports/supply-chain/supply-chain-manifest.json").exists()
     event_types = [
         json.loads(line)["event_type"]
