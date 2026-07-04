@@ -72,7 +72,7 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 2
-      - uses: Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan@v0.1.0-alpha.3
+      - uses: Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan@v0.1.0-alpha.4
         with:
           project_namespace: ${{ github.repository }}
           ledger_path: .ecl-trainer/events.jsonl
@@ -101,7 +101,7 @@ Recommended rollout:
 Install from this repository tag:
 
 ```bash
-python3 -m pip install "ecl-trainer @ git+https://github.com/Intelligent-Context-AI-Inc/signalledger.git@v0.1.0-alpha.3"
+python3 -m pip install "ecl-trainer @ git+https://github.com/Intelligent-Context-AI-Inc/signalledger.git@v0.1.0-alpha.4"
 ```
 
 Run local checks:

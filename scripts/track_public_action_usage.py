@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 
 QUERIES = {
     "released_action_reference": "Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan",
-    "released_action_tag_alpha3": "ecl-trainer-scan@v0.1.0-alpha.3",
+    "released_action_tag_alpha4": "ecl-trainer-scan@v0.1.0-alpha.4",
     "local_action_path": "./.github/actions/ecl-trainer-scan",
 }
 
