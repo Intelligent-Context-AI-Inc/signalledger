@@ -54,3 +54,17 @@ def test_github_action_runner_reports_payload_policy_failure(tmp_path, monkeypat
 def test_github_action_fail_on_payload_violation_input_is_wired():
     action = Path(".github/actions/ecl-trainer-scan/action.yml").read_text(encoding="utf-8")
     assert "inputs.fail_on_payload_violation" in action
+
+
+def test_github_action_usage_ping_is_opt_in_and_metadata_only():
+    action = Path(".github/actions/ecl-trainer-scan/action.yml").read_text(encoding="utf-8")
+    assert "report_usage:" in action
+    assert "default: 'false'" in action
+    assert "usage_ping_url:" in action
+    assert "include_repository_name_in_usage:" in action
+    assert "if: inputs.report_usage == 'true'" in action
+    assert "usage-ping.json" in action
+    assert "payload[\"repository\"]" in action
+    assert "ECL_USAGE_INCLUDE_REPOSITORY_NAME" in action
+    assert "raw_dataset_rows" not in action
+    assert "raw_diff" not in action

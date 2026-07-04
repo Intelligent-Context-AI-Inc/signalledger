@@ -24,3 +24,4 @@ jobs:
           upload_artifact: 'true'
           domain_selection_mode: auto
           enabled_domains: ''
+          report_usage: 'false'

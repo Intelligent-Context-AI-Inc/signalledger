@@ -56,6 +56,18 @@ inputs:
     required: false
     default: 'true'
     description: Fail when payload policy blocks output
+  report_usage:
+    required: false
+    default: 'false'
+    description: Opt in to a metadata-only adoption ping. Disabled by default.
+  usage_ping_url:
+    required: false
+    default: ''
+    description: Optional HTTPS endpoint for the adoption ping when report_usage is true
+  include_repository_name_in_usage:
+    required: false
+    default: 'false'
+    description: Include owner/repo in the adoption ping. Disabled by default.
 runs:
   using: composite
   steps:
@@ -117,6 +129,94 @@ runs:
         if [[ -f "${{ inputs.output_dir }}/pr-comment.md" && -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
           cat "${{ inputs.output_dir }}/pr-comment.md" >> "${GITHUB_STEP_SUMMARY}"
         fi
+
+    - name: Write optional metadata-only usage ping
+      if: inputs.report_usage == 'true'
+      shell: bash
+      env:
+        ECL_USAGE_OUTPUT_DIR: ${{ inputs.output_dir }}
+        ECL_USAGE_RISK_POLICY: ${{ inputs.risk_policy }}
+        ECL_USAGE_CHANGED_ONLY: ${{ inputs.changed_only }}
+        ECL_USAGE_DOMAIN_SELECTION_MODE: ${{ inputs.domain_selection_mode }}
+        ECL_USAGE_ENABLED_DOMAINS: ${{ inputs.enabled_domains }}
+        ECL_USAGE_INCLUDE_REPOSITORY_NAME: ${{ inputs.include_repository_name_in_usage }}
+        ECL_USAGE_PING_URL: ${{ inputs.usage_ping_url }}
+      run: |
+        set +e
+        mkdir -p "${ECL_USAGE_OUTPUT_DIR}"
+        python3 - <<'PY'
+        import json
+        import os
+        from datetime import datetime, timezone
+        from pathlib import Path
+
+        output_dir = Path(os.environ["ECL_USAGE_OUTPUT_DIR"])
+        manifest_path = output_dir / "manifest.json"
+        risk_report_path = output_dir / "risk-report.json"
+
+        def load_json(path):
+            if not path.exists():
+                return {}
+            try:
+                value = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                return {}
+            return value if isinstance(value, dict) else {}
+
+        manifest = load_json(manifest_path)
+        risk_report = load_json(risk_report_path)
+        enabled_domains = [
+            part.strip()
+            for part in os.environ.get("ECL_USAGE_ENABLED_DOMAINS", "").split(",")
+            if part.strip()
+        ]
+        include_repo = os.environ.get("ECL_USAGE_INCLUDE_REPOSITORY_NAME", "false").lower() == "true"
+        payload = {
+            "schema": "signalledger_action_usage_ping_v1",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+            "action": "Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan",
+            "action_ref": os.environ.get("GITHUB_ACTION_REF") or "unknown",
+            "repository_visibility": os.environ.get("GITHUB_REPOSITORY_VISIBILITY") or "unknown",
+            "repository_included": include_repo,
+            "event_name": os.environ.get("GITHUB_EVENT_NAME") or "unknown",
+            "runner_os": os.environ.get("RUNNER_OS") or "unknown",
+            "risk_policy": os.environ.get("ECL_USAGE_RISK_POLICY") or "unknown",
+            "changed_only": os.environ.get("ECL_USAGE_CHANGED_ONLY") == "true",
+            "domain_selection_mode": os.environ.get("ECL_USAGE_DOMAIN_SELECTION_MODE") or "unknown",
+            "enabled_domain_count": len(enabled_domains),
+            "payload_policy": manifest.get("payload_policy") or risk_report.get("payload_policy") or "unknown",
+            "risk_gate_status": manifest.get("risk_gate_status") or "unknown",
+            "should_fail": bool(manifest.get("should_fail", risk_report.get("should_fail", False))),
+            "artifact_bundle_type": manifest.get("mode") or "local-only",
+            "retained_raw_payload": False,
+        }
+        if include_repo:
+            payload["repository"] = os.environ.get("GITHUB_REPOSITORY") or "unknown"
+        (output_dir / "usage-ping.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        PY
+        if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+          {
+            echo ""
+            echo "### SignalLedger optional usage ping"
+            echo ""
+            echo "- Usage ping enabled: \`true\`"
+            echo "- Repository name included: \`${ECL_USAGE_INCLUDE_REPOSITORY_NAME}\`"
+            echo "- Local ping file: \`${ECL_USAGE_OUTPUT_DIR}/usage-ping.json\`"
+            if [[ -n "${ECL_USAGE_PING_URL}" ]]; then
+              echo "- Ping endpoint configured: \`true\`"
+            else
+              echo "- Ping endpoint configured: \`false\`"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+        fi
+        if [[ -n "${ECL_USAGE_PING_URL}" ]]; then
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --data @"${ECL_USAGE_OUTPUT_DIR}/usage-ping.json" \
+            "${ECL_USAGE_PING_URL}" || true
+        fi
+        exit 0
 
     - name: Post sticky PR comment
       if: inputs.post_pr_comment == 'true'

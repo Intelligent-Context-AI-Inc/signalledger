@@ -80,6 +80,7 @@ jobs:
           upload_artifact: 'true'
           domain_selection_mode: auto
           enabled_domains: ''
+          report_usage: 'false'
 ```
 
 Recommended rollout:
@@ -137,6 +138,7 @@ See:
 - `docs/ecl_learning_ledger/HUGGING_FACE_TEAM_PACKET.md`
 - `docs/ecl_learning_ledger/LANDING_PAGE_PROOF_KIT.md`
 - `docs/ecl_learning_ledger/GITHUB_ACTION_FIRST_RUN_UX.md`
+- `docs/ADOPTION_TRACKING.md`
 - `docs/security/ecl_learning_ledger/ENTERPRISE_SECURITY_REVIEW_PACKET.md`
 
 ## Development Gate
