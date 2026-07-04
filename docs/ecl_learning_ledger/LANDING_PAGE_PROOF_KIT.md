@@ -10,6 +10,17 @@ A GitHub PR gets a training-data risk report, compliance passport, hash-chain ve
 
 No SaaS account. No dataset upload. No raw payload in the audit trail.
 
+## AI CI/CD Bridge
+
+Traditional LLM release gates ask whether a candidate model or RAG pipeline
+regressed after a candidate exists. ECL runs earlier: it asks whether the
+training-data or curriculum change is structurally risky before training,
+refresh, publication, or expensive eval begins.
+
+ECL complements baseline evals, drift detection, shadow validation, and
+cost/latency gates. It gives those gates a local, hash-chained history of what
+changed upstream.
+
 ## Current Tools Vs. ECL
 
 | Question | Current tools | With ECL Learning Ledger |
@@ -20,6 +31,8 @@ No SaaS account. No dataset upload. No raw payload in the audit trail.
 | Can compliance review the run? | Hand-written notes | Local compliance passport generated from the ledger |
 | Can the artifact be verified later? | Static CI artifact | Hash-chained append-only ledger plus `verification.json` |
 | Does the vendor need data access? | Often yes for hosted tooling | No SaaS account and no upload required |
+| Did model behavior regress? | Baseline evals, drift detection, shadow validation | ECL records upstream metadata and eval deltas so future gates can correlate data structure with behavior |
+| Is the proposed training-data change safe to run? | Usually manual review before training | Local training-data release gate before GPU spend |
 
 ## Public Proof-Point Snippets
 
@@ -89,8 +102,18 @@ Before ECL, a training-data PR looked like a diff and a reviewer checklist.
 
 After ECL, the PR becomes a local, cryptographically verifiable training-data risk event. The same CI run produces the risk report, compliance passport, verification file, PR comment, supply-chain evidence, and append-only ledger. Reviewers get an actionable signal before GPUs spin up, while security teams get proof that no raw payload crossed into the vendor path.
 
+This does not replace model eval gates. It gives ML platform teams an upstream
+gate for the data and curriculum changes that silently shape model behavior.
+
 ## CTA Copy
 
 Copy one workflow into `.github/workflows/ecl-trainer.yml`, open a PR that changes training metadata, and inspect the local artifacts under `.ecl-trainer/reports/`.
 
 Start in `report_only`. Graduate to `block_on_payload_violation` once the team is comfortable with the signal.
+
+Recommended rollout:
+
+1. Measure with `report_only`.
+2. Require attention with `warn`.
+3. Block raw-payload failures with `block_on_payload_violation`.
+4. Block trusted structural risks with `block_on_high_risk`.

@@ -1,0 +1,376 @@
+{
+  "bundle_fingerprint_sha256": "77ec962b50470139d3e77d67122d3b13edcab9a30dda0e3672a77ac031a7fe14",
+  "captured_at_utc": "2026-07-03T20:00:50Z",
+  "collector": "standalone_huggingface_public_api_metadata_collector",
+  "errors": [],
+  "no_payload_policy": {
+    "excluded_fields": [
+      "README / model-card body",
+      "widgetData sample prompts or outputs",
+      "spaces list",
+      "config.tokenizer_config.chat_template",
+      "extra_gated_prompt full license text",
+      "extra_gated_fields collection form details",
+      "raw model, tokenizer, checkpoint, safetensor, PyTorch, TensorFlow, GGUF, or dataset files"
+    ],
+    "private_customer_data_touched": false,
+    "raw_dataset_rows_downloaded": false,
+    "raw_model_files_downloaded": false,
+    "readme_or_card_body_downloaded": false,
+    "sample_prompts_or_outputs_retained": false,
+    "spaces_or_downstream_apps_retained": false,
+    "weights_or_checkpoints_downloaded": false
+  },
+  "results": [
+    {
+      "api_url": "https://huggingface.co/api/models/Qwen/Qwen3-8B",
+      "captured_public_metadata": {
+        "author": "Qwen",
+        "base_model": [
+          "Qwen/Qwen3-8B-Base"
+        ],
+        "disabled": false,
+        "downloads": 15327298,
+        "excluded_field_presence": {
+          "chat_template_present_but_excluded": true,
+          "extra_gated_prompt_present_but_excluded": false,
+          "spaces_present_but_excluded": true,
+          "widgetData_present_but_excluded": true
+        },
+        "gated": false,
+        "language": [],
+        "lastModified": "2025-07-26T03:49:13.000Z",
+        "library_name": "transformers",
+        "license": "apache-2.0",
+        "likes": 1177,
+        "model_index_entry_count": 0,
+        "pipeline_tag": "text-generation",
+        "private": false,
+        "repository_shape": {
+          "config_files_listed": 4,
+          "documentation_files_listed": 2,
+          "license_file_listed": true,
+          "model_artifact_files_listed": 5,
+          "readme_file_listed": true,
+          "tokenizer_files_listed": 4,
+          "total_repository_files_listed": 15
+        },
+        "safetensors_parameter_total": 8190735360,
+        "sha": "b968826d9c46dd6066d109eabc6255188de91218",
+        "tag_counts": {
+          "arxiv_tags": 2,
+          "base_model_tags": 2,
+          "dataset_tags": 0,
+          "has_eval_results_tag": true,
+          "has_safetensors_tag": true,
+          "total_tags": 15
+        }
+      },
+      "controls": [
+        {
+          "evidence": "apache-2.0",
+          "id": "license_metadata_present",
+          "status": true
+        },
+        {
+          "evidence": "LICENSE/README sibling metadata only",
+          "id": "license_file_listed",
+          "status": true
+        },
+        {
+          "evidence": [
+            "Qwen/Qwen3-8B-Base"
+          ],
+          "id": "base_model_declared",
+          "status": true
+        },
+        {
+          "evidence": "text-generation",
+          "id": "pipeline_declared",
+          "status": true
+        },
+        {
+          "evidence": "transformers",
+          "id": "library_declared",
+          "status": true
+        },
+        {
+          "evidence": "model-index entries: 0; eval-results tag: True",
+          "id": "machine_readable_eval_detail",
+          "status": false
+        },
+        {
+          "evidence": "missing machine-readable dataset/training-data reference",
+          "id": "training_data_reference_present",
+          "status": false
+        },
+        {
+          "evidence": "missing",
+          "id": "language_metadata_present",
+          "status": false
+        },
+        {
+          "evidence": "safetensors metadata present",
+          "id": "safe_tensor_format_declared",
+          "status": true
+        },
+        {
+          "evidence": "API metadata only; no repo file bodies or artifacts downloaded",
+          "id": "no_payload_collector_boundary",
+          "status": true
+        }
+      ],
+      "findings": [
+        {
+          "code": "LANGUAGE_METADATA_GAP",
+          "detail": "No machine-readable language field/tag was visible.",
+          "recommendation": "Add language metadata in cardData or tags.",
+          "severity": "medium"
+        },
+        {
+          "code": "TRAINING_DATA_PROVENANCE_GAP",
+          "detail": "No machine-readable dataset/training-data reference was visible.",
+          "recommendation": "Add dataset references, source-mixture descriptors, or a provenance summary that avoids raw payload.",
+          "severity": "medium"
+        },
+        {
+          "code": "EVAL_RESULTS_TAG_WITHOUT_MODEL_INDEX",
+          "detail": "The repo has an eval-results tag but no model-index entries in API metadata.",
+          "recommendation": "Add model-index evaluation entries or a structured evaluation summary.",
+          "severity": "medium"
+        },
+        {
+          "code": "WIDGET_DATA_EXCLUDED",
+          "detail": "HF API returned widgetData; collector deliberately excluded sample prompts/outputs from stored evidence.",
+          "recommendation": "Keep widgetData outside compliance artifacts or store only an exclusion assertion.",
+          "severity": "info"
+        },
+        {
+          "code": "CHAT_TEMPLATE_EXCLUDED",
+          "detail": "HF API returned tokenizer chat_template; collector excluded the raw template from evidence.",
+          "recommendation": "Store only a hash or presence flag if chat-template governance is needed.",
+          "severity": "info"
+        }
+      ],
+      "metadata_fingerprint_sha256": "01319d97e6c5dd4e6c7273ae0441d5b2b0b7627ba93ca06c12cc269cad4cae33",
+      "recommended_metadata_indicators": [
+        {
+          "indicator": "payload_policy",
+          "value": "zero_payload_metadata_only_passed"
+        },
+        {
+          "indicator": "license",
+          "value": "present"
+        },
+        {
+          "indicator": "license_file",
+          "value": "listed"
+        },
+        {
+          "indicator": "base_model_lineage",
+          "value": "present"
+        },
+        {
+          "indicator": "training_data_reference",
+          "value": "missing"
+        },
+        {
+          "indicator": "eval_metadata",
+          "value": "tag_only"
+        },
+        {
+          "indicator": "language_metadata",
+          "value": "missing"
+        },
+        {
+          "indicator": "review_status",
+          "value": "watch"
+        }
+      ],
+      "repo_id": "Qwen/Qwen3-8B",
+      "repo_url": "https://huggingface.co/Qwen/Qwen3-8B",
+      "status": "watch"
+    },
+    {
+      "api_url": "https://huggingface.co/api/models/mistralai/Mistral-7B-Instruct-v0.3",
+      "captured_public_metadata": {
+        "author": "mistralai",
+        "base_model": "mistralai/Mistral-7B-v0.3",
+        "disabled": false,
+        "downloads": 3740132,
+        "excluded_field_presence": {
+          "chat_template_present_but_excluded": true,
+          "extra_gated_prompt_present_but_excluded": false,
+          "spaces_present_but_excluded": true,
+          "widgetData_present_but_excluded": false
+        },
+        "gated": false,
+        "language": [],
+        "lastModified": "2025-12-03T12:13:48.000Z",
+        "library_name": "vllm",
+        "license": "apache-2.0",
+        "likes": 2682,
+        "model_index_entry_count": 0,
+        "pipeline_tag": null,
+        "private": false,
+        "repository_shape": {
+          "config_files_listed": 5,
+          "documentation_files_listed": 1,
+          "license_file_listed": false,
+          "model_artifact_files_listed": 4,
+          "readme_file_listed": true,
+          "tokenizer_files_listed": 4,
+          "total_repository_files_listed": 15
+        },
+        "safetensors_parameter_total": 7248023552,
+        "sha": "c170c708c41dac9275d15a8fff4eca08d52bab71",
+        "tag_counts": {
+          "arxiv_tags": 0,
+          "base_model_tags": 2,
+          "dataset_tags": 0,
+          "has_eval_results_tag": false,
+          "has_safetensors_tag": true,
+          "total_tags": 8
+        }
+      },
+      "controls": [
+        {
+          "evidence": "apache-2.0",
+          "id": "license_metadata_present",
+          "status": true
+        },
+        {
+          "evidence": "LICENSE/README sibling metadata only",
+          "id": "license_file_listed",
+          "status": false
+        },
+        {
+          "evidence": "mistralai/Mistral-7B-v0.3",
+          "id": "base_model_declared",
+          "status": true
+        },
+        {
+          "evidence": "missing",
+          "id": "pipeline_declared",
+          "status": false
+        },
+        {
+          "evidence": "vllm",
+          "id": "library_declared",
+          "status": true
+        },
+        {
+          "evidence": "model-index entries: 0; eval-results tag: False",
+          "id": "machine_readable_eval_detail",
+          "status": false
+        },
+        {
+          "evidence": "missing machine-readable dataset/training-data reference",
+          "id": "training_data_reference_present",
+          "status": false
+        },
+        {
+          "evidence": "missing",
+          "id": "language_metadata_present",
+          "status": false
+        },
+        {
+          "evidence": "safetensors metadata present",
+          "id": "safe_tensor_format_declared",
+          "status": true
+        },
+        {
+          "evidence": "API metadata only; no repo file bodies or artifacts downloaded",
+          "id": "no_payload_collector_boundary",
+          "status": true
+        }
+      ],
+      "findings": [
+        {
+          "code": "LICENSE_FILE_NOT_LISTED",
+          "detail": "License metadata is present, but no LICENSE/LICENSE.md sibling was visible in repository metadata.",
+          "recommendation": "Add or expose a license file alongside the model card.",
+          "severity": "medium"
+        },
+        {
+          "code": "PIPELINE_TAG_MISSING",
+          "detail": "No machine-readable text-generation pipeline tag was visible.",
+          "recommendation": "Add pipeline_tag: text-generation or equivalent model-card metadata.",
+          "severity": "medium"
+        },
+        {
+          "code": "LANGUAGE_METADATA_GAP",
+          "detail": "No machine-readable language field/tag was visible.",
+          "recommendation": "Add language metadata in cardData or tags.",
+          "severity": "medium"
+        },
+        {
+          "code": "TRAINING_DATA_PROVENANCE_GAP",
+          "detail": "No machine-readable dataset/training-data reference was visible.",
+          "recommendation": "Add dataset references, source-mixture descriptors, or a provenance summary that avoids raw payload.",
+          "severity": "medium"
+        },
+        {
+          "code": "EVAL_METADATA_GAP",
+          "detail": "No eval-results tag or model-index entries were visible.",
+          "recommendation": "Add structured eval summary metadata, with benchmark names and verification status where available.",
+          "severity": "medium"
+        },
+        {
+          "code": "CHAT_TEMPLATE_EXCLUDED",
+          "detail": "HF API returned tokenizer chat_template; collector excluded the raw template from evidence.",
+          "recommendation": "Store only a hash or presence flag if chat-template governance is needed.",
+          "severity": "info"
+        }
+      ],
+      "metadata_fingerprint_sha256": "fb8edeec7e6c759dd70dfe10c6531e695b8e79e3e69dee76f881cab3ecfe3eb0",
+      "recommended_metadata_indicators": [
+        {
+          "indicator": "payload_policy",
+          "value": "zero_payload_metadata_only_passed"
+        },
+        {
+          "indicator": "license",
+          "value": "present"
+        },
+        {
+          "indicator": "license_file",
+          "value": "not_listed"
+        },
+        {
+          "indicator": "base_model_lineage",
+          "value": "present"
+        },
+        {
+          "indicator": "training_data_reference",
+          "value": "missing"
+        },
+        {
+          "indicator": "eval_metadata",
+          "value": "missing"
+        },
+        {
+          "indicator": "language_metadata",
+          "value": "missing"
+        },
+        {
+          "indicator": "review_status",
+          "value": "review_recommended"
+        }
+      ],
+      "repo_id": "mistralai/Mistral-7B-Instruct-v0.3",
+      "repo_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3",
+      "status": "review_recommended"
+    }
+  ],
+  "schema": "signalledger_hf_zero_payload_catalog_check_v1",
+  "scope": {
+    "api_family": "https://huggingface.co/api/models/{repo_id}",
+    "entries_checked": [
+      "Qwen/Qwen3-8B",
+      "mistralai/Mistral-7B-Instruct-v0.3"
+    ],
+    "network_calls": "public metadata endpoints only",
+    "repo_type": "model"
+  }
+}
