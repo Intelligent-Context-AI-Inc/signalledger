@@ -62,7 +62,7 @@ def test_github_action_fail_on_payload_violation_input_is_wired():
     assert "block_on_release_risk" in action
     assert "image_mode:" in action
     assert "image_ref:" in action
-    assert "ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4" in action
+    assert "ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.5" in action
     assert "Published ECL Trainer image unavailable; falling back to local build." in action
     assert "${ECL_TRAINER_IMAGE}" in action
 

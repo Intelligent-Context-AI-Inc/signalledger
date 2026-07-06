@@ -50,13 +50,13 @@ The action supports a published-image mode:
 ```yaml
 with:
   image_mode: auto
-  image_ref: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4
+  image_ref: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.5
 ```
 
 Defaults:
 
 - `image_mode`: `auto`
-- `image_ref`: `ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4`
+- `image_ref`: `ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.5`
 
 In `auto` mode, the action pulls the published GHCR image first. If that image
 is unavailable, it falls back to building `Dockerfile.ecl-trainer` locally in

@@ -85,7 +85,7 @@ The default is `auto`:
 ```yaml
 with:
   image_mode: auto
-  image_ref: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4
+  image_ref: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.5
 ```
 
 Published-image pulls provide a stronger usage signal through GHCR package
