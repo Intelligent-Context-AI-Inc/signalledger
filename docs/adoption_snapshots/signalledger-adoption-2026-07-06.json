@@ -1,0 +1,71 @@
+{
+  "captured_at_utc": "2026-07-06T14:26:02Z",
+  "note": "GitHub traffic is a directional interest signal and may include humans, bots, internal tests, package installs, and Action executions. Code search includes public external workflow references only.",
+  "public_workflow_references": {
+    "local_action_path": {
+      "public_external_match_sample_count": 0,
+      "public_external_matches": [],
+      "public_external_repositories": [],
+      "public_external_repository_sample_count": 0,
+      "query": "./.github/actions/ecl-trainer-scan path:.github/workflows",
+      "result_limit": 100,
+      "status": "ok"
+    },
+    "released_action_reference": {
+      "public_external_match_sample_count": 0,
+      "public_external_matches": [],
+      "public_external_repositories": [],
+      "public_external_repository_sample_count": 0,
+      "query": "Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan path:.github/workflows",
+      "result_limit": 100,
+      "status": "ok"
+    },
+    "released_action_tag_alpha5": {
+      "public_external_match_sample_count": 0,
+      "public_external_matches": [],
+      "public_external_repositories": [],
+      "public_external_repository_sample_count": 0,
+      "query": "ecl-trainer-scan@v0.1.0-alpha.5 path:.github/workflows",
+      "result_limit": 100,
+      "status": "ok"
+    }
+  },
+  "repository": "Intelligent-Context-AI-Inc/signalledger",
+  "schema": "signalledger_public_adoption_snapshot_v1",
+  "source": "gh_api_and_search",
+  "traffic": {
+    "clones": {
+      "args": [
+        "api",
+        "repos/Intelligent-Context-AI-Inc/signalledger/traffic/clones"
+      ],
+      "error": "gh: Resource not accessible by integration (HTTP 403)",
+      "status": "error"
+    },
+    "popular_paths": {
+      "args": [
+        "api",
+        "repos/Intelligent-Context-AI-Inc/signalledger/traffic/popular/paths"
+      ],
+      "error": "gh: Resource not accessible by integration (HTTP 403)",
+      "status": "error"
+    },
+    "popular_referrers": {
+      "args": [
+        "api",
+        "repos/Intelligent-Context-AI-Inc/signalledger/traffic/popular/referrers"
+      ],
+      "error": "gh: Resource not accessible by integration (HTTP 403)",
+      "status": "error"
+    },
+    "views": {
+      "args": [
+        "api",
+        "repos/Intelligent-Context-AI-Inc/signalledger/traffic/views"
+      ],
+      "error": "gh: Resource not accessible by integration (HTTP 403)",
+      "status": "error"
+    }
+  },
+  "visibility": "public_and_repo_owner_traffic"
+}
