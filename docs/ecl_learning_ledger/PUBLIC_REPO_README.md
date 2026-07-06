@@ -83,6 +83,7 @@ jobs:
           domain_selection_mode: auto
           enabled_domains: ''
           generate_mlops_pack: 'true'
+          image_mode: auto
           report_usage: 'false'
 ```
 

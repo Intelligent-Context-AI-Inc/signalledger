@@ -1,0 +1,35 @@
+name: Archive Adoption Signals
+
+on:
+  schedule:
+    - cron: '17 13 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      # actions/checkout v4 tag resolved 2026-06-30.
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Capture public adoption snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          snapshot_path="docs/adoption_snapshots/signalledger-adoption-$(date -u +%Y-%m-%d).json"
+          python3 scripts/track_public_action_usage.py --output "${snapshot_path}"
+
+      - name: Commit adoption snapshot
+        run: |
+          if [[ -z "$(git status --porcelain docs/adoption_snapshots)" ]]; then
+            echo "No adoption snapshot changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/adoption_snapshots
+          git commit -m "Archive SignalLedger adoption signals"
+          git push

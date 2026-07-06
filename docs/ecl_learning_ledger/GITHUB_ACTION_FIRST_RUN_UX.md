@@ -45,6 +45,8 @@ jobs:
           upload_artifact: "true"
           domain_selection_mode: auto
           enabled_domains: ""
+          generate_mlops_pack: "true"
+          image_mode: auto
           fail_on_payload_violation: "true"
           report_usage: "false"
 ```
