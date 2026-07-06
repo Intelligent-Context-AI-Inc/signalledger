@@ -25,5 +25,5 @@ jobs:
           domain_selection_mode: auto
           enabled_domains: ''
           generate_mlops_pack: 'true'
-          report_usage: 'false'
+          image_mode: auto
           report_usage: 'false'

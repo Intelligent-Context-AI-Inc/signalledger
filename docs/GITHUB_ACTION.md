@@ -34,6 +34,7 @@ steps:
       enabled_domains: ""
       ignore_staleness: "false"
       generate_mlops_pack: "true"
+      image_mode: auto
       report_usage: "false"
 ```
 
@@ -68,6 +69,28 @@ The GitHub Action runs the global structural core by default. Domain extensions 
 The Docker image bakes a local DuckDB Atlas from metadata-only public seed manifests during image build. The public alpha Atlas includes top-20 domain seed coverage; PR comments and artifacts expose aggregate seed counts, not source rows.
 
 Set `ignore_staleness: "true"` for long-running training branches when operators need to mute non-blocking Atlas lifecycle warnings.
+
+## Docker Image Mode
+
+The action runs in Docker and supports three image modes:
+
+- `image_mode: auto`: pull the published GHCR image first; if it is unavailable,
+  build `Dockerfile.ecl-trainer` locally in the runner.
+- `image_mode: published`: require the published GHCR image and fail if it
+  cannot be pulled.
+- `image_mode: local`: always build `Dockerfile.ecl-trainer` locally.
+
+The default is `auto`:
+
+```yaml
+with:
+  image_mode: auto
+  image_ref: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4
+```
+
+Published-image pulls provide a stronger usage signal through GHCR package
+download counts. The local fallback preserves the no-SaaS, no-upload trust path
+and keeps the public alpha usable before a new image tag has been published.
 
 ## Safe Fork Behavior
 
@@ -116,4 +139,4 @@ It sends that JSON only when `usage_ping_url` is set. Repository name is exclude
 unless `include_repository_name_in_usage` is explicitly set to `"true"`.
 
 See `docs/ADOPTION_TRACKING.md` for the public used-by signal, optional usage
-ping schema, and public code-search tracking workflow.
+ping schema, GHCR pull-count signal, and scheduled adoption snapshot workflow.

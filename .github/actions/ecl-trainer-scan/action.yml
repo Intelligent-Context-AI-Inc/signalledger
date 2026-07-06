@@ -72,17 +72,47 @@ inputs:
     required: false
     default: 'false'
     description: Include owner/repo in the adoption ping. Disabled by default.
+  image_mode:
+    required: false
+    default: auto
+    description: auto, published, or local. Auto pulls GHCR first and falls back to a local build.
+  image_ref:
+    required: false
+    default: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4
+    description: Published ECL Trainer image to pull when image_mode is auto or published.
 runs:
   using: composite
   steps:
-    - name: Build local ECL Trainer Docker image
+    - name: Resolve ECL Trainer Docker image
       shell: bash
       run: |
+        set -euo pipefail
+        requested_mode="${{ inputs.image_mode }}"
+        image_ref="${{ inputs.image_ref }}"
+        local_tag="ecl-trainer-ci:${GITHUB_SHA:-local}"
         action_repo_root="$(cd "${GITHUB_ACTION_PATH}/../../.." && pwd)"
+        if [[ "${requested_mode}" != "auto" && "${requested_mode}" != "published" && "${requested_mode}" != "local" ]]; then
+          echo "image_mode must be auto, published, or local." >&2
+          exit 1
+        fi
+        if [[ "${requested_mode}" != "local" ]]; then
+          if docker pull "${image_ref}"; then
+            echo "ECL_TRAINER_IMAGE=${image_ref}" >> "${GITHUB_ENV}"
+            echo "ECL_TRAINER_IMAGE_SOURCE=published" >> "${GITHUB_ENV}"
+            exit 0
+          fi
+          if [[ "${requested_mode}" == "published" ]]; then
+            echo "Unable to pull published ECL Trainer image: ${image_ref}" >&2
+            exit 1
+          fi
+          echo "Published ECL Trainer image unavailable; falling back to local build."
+        fi
         docker build \
           --file "${action_repo_root}/Dockerfile.ecl-trainer" \
-          --tag ecl-trainer-ci:${GITHUB_SHA:-local} \
+          --tag "${local_tag}" \
           "${action_repo_root}"
+        echo "ECL_TRAINER_IMAGE=${local_tag}" >> "${GITHUB_ENV}"
+        echo "ECL_TRAINER_IMAGE_SOURCE=local_build" >> "${GITHUB_ENV}"
 
     - name: Generate local training-data risk report and passport
       shell: bash
@@ -118,7 +148,7 @@ runs:
           -e GITHUB_EVENT_NAME \
           -e GITHUB_API_URL \
           -e GITHUB_WORKSPACE=/workspace \
-          ecl-trainer-ci:${GITHUB_SHA:-local} \
+          "${ECL_TRAINER_IMAGE}" \
           github-pr-report \
           --project-namespace "${{ inputs.project_namespace }}" \
           --ledger-path "${{ inputs.ledger_path }}" \
@@ -189,6 +219,7 @@ runs:
             "repository_included": include_repo,
             "event_name": os.environ.get("GITHUB_EVENT_NAME") or "unknown",
             "runner_os": os.environ.get("RUNNER_OS") or "unknown",
+            "image_source": os.environ.get("ECL_TRAINER_IMAGE_SOURCE") or "unknown",
             "risk_policy": os.environ.get("ECL_USAGE_RISK_POLICY") or "unknown",
             "changed_only": os.environ.get("ECL_USAGE_CHANGED_ONLY") == "true",
             "domain_selection_mode": os.environ.get("ECL_USAGE_DOMAIN_SELECTION_MODE") or "unknown",
@@ -246,7 +277,7 @@ runs:
           -e GITHUB_TOKEN \
           -e GITHUB_REPOSITORY \
           -e GITHUB_API_URL \
-          ecl-trainer-ci:${GITHUB_SHA:-local} \
+          "${ECL_TRAINER_IMAGE}" \
           post-github-comment \
           --comment-path "${{ inputs.output_dir }}/pr-comment.md" || true
 

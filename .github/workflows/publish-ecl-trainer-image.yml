@@ -1,0 +1,82 @@
+name: Publish ECL Trainer Image
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        required: false
+        default: v0.1.0-alpha.4
+        description: GHCR image tag to publish
+      publish_latest:
+        required: false
+        default: 'false'
+        description: Also publish the latest tag
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: intelligent-context-ai-inc/signalledger-ecl-trainer
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # actions/checkout v4 tag resolved 2026-06-30.
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Resolve image tags
+        run: |
+          image_tag="${{ github.event.inputs.image_tag }}"
+          if [[ -z "${image_tag}" ]]; then
+            image_tag="${GITHUB_REF_NAME}"
+          fi
+          if [[ -z "${image_tag}" ]]; then
+            echo "Unable to resolve image tag." >&2
+            exit 1
+          fi
+          echo "IMAGE_TAG=${image_tag}" >> "${GITHUB_ENV}"
+          echo "IMAGE_REF=${REGISTRY}/${IMAGE_NAME}:${image_tag}" >> "${GITHUB_ENV}"
+          echo "IMAGE_SHA_REF=${REGISTRY}/${IMAGE_NAME}:sha-${GITHUB_SHA::12}" >> "${GITHUB_ENV}"
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ github.token }}" | docker login "${REGISTRY}" \
+            --username "${{ github.actor }}" \
+            --password-stdin
+
+      - name: Build ECL Trainer image
+        run: |
+          docker build \
+            --file Dockerfile.ecl-trainer \
+            --label org.opencontainers.image.source="https://github.com/${{ github.repository }}" \
+            --label org.opencontainers.image.revision="${GITHUB_SHA}" \
+            --label org.opencontainers.image.version="${IMAGE_TAG}" \
+            --tag "${IMAGE_REF}" \
+            --tag "${IMAGE_SHA_REF}" \
+            .
+
+      - name: Push ECL Trainer image
+        run: |
+          docker push "${IMAGE_REF}"
+          docker push "${IMAGE_SHA_REF}"
+          if [[ "${{ github.event.inputs.publish_latest }}" == "true" ]]; then
+            latest_ref="${REGISTRY}/${IMAGE_NAME}:latest"
+            docker tag "${IMAGE_REF}" "${latest_ref}"
+            docker push "${latest_ref}"
+          fi
+
+      - name: Write job summary
+        run: |
+          {
+            echo "### Published SignalLedger ECL Trainer image"
+            echo ""
+            echo "- Image: \`${IMAGE_REF}\`"
+            echo "- SHA tag: \`${IMAGE_SHA_REF}\`"
+            echo "- Source: \`https://github.com/${{ github.repository }}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

@@ -60,6 +60,11 @@ def test_github_action_fail_on_payload_violation_input_is_wired():
     assert "generate_mlops_pack:" in action
     assert "default: 'true'" in action
     assert "block_on_release_risk" in action
+    assert "image_mode:" in action
+    assert "image_ref:" in action
+    assert "ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4" in action
+    assert "Published ECL Trainer image unavailable; falling back to local build." in action
+    assert "${ECL_TRAINER_IMAGE}" in action
 
 
 def test_github_action_usage_ping_is_opt_in_and_metadata_only():
@@ -74,3 +79,24 @@ def test_github_action_usage_ping_is_opt_in_and_metadata_only():
     assert "ECL_USAGE_INCLUDE_REPOSITORY_NAME" in action
     assert "raw_dataset_rows" not in action
     assert "raw_diff" not in action
+
+
+def test_adoption_observability_workflows_are_wired():
+    archive = Path(".github/workflows/archive-adoption-signals.yml").read_text(encoding="utf-8")
+    publish = Path(".github/workflows/publish-ecl-trainer-image.yml").read_text(encoding="utf-8")
+    script = Path("scripts/track_public_action_usage.py").read_text(encoding="utf-8")
+
+    assert "python3 scripts/track_public_action_usage.py --output" in archive
+    assert "docs/adoption_snapshots" in archive
+    assert "contents: write" in archive
+    assert "packages: write" in publish
+    assert "docker push" in publish
+    assert "signalledger-ecl-trainer" in publish
+    assert "traffic/clones" in script
+    assert "path:.github/workflows" in script
+
+
+def test_public_example_has_single_usage_flag_and_image_mode():
+    workflow = Path("examples/github_action/ecl-trainer.yml").read_text(encoding="utf-8")
+    assert workflow.count("report_usage: 'false'") == 1
+    assert "image_mode: auto" in workflow

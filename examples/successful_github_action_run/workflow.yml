@@ -28,4 +28,6 @@ jobs:
           artifact_name: signalledger-smoke-artifacts
           domain_selection_mode: explicit
           enabled_domains: financial_services
+          generate_mlops_pack: "true"
+          image_mode: auto
           ignore_staleness: "true"
