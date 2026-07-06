@@ -78,7 +78,7 @@ inputs:
     description: auto, published, or local. Auto pulls GHCR first and falls back to a local build.
   image_ref:
     required: false
-    default: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.4
+    default: ghcr.io/intelligent-context-ai-inc/signalledger-ecl-trainer:v0.1.0-alpha.5
     description: Published ECL Trainer image to pull when image_mode is auto or published.
 runs:
   using: composite

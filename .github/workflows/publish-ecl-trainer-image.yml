@@ -8,7 +8,7 @@ on:
     inputs:
       image_tag:
         required: false
-        default: v0.1.0-alpha.4
+        default: v0.1.0-alpha.5
         description: GHCR image tag to publish
       publish_latest:
         required: false

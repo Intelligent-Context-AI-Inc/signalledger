@@ -14,7 +14,7 @@ QUERIES = {
         "Intelligent-Context-AI-Inc/signalledger/.github/actions/ecl-trainer-scan "
         "path:.github/workflows"
     ),
-    "released_action_tag_alpha4": "ecl-trainer-scan@v0.1.0-alpha.4 path:.github/workflows",
+    "released_action_tag_alpha5": "ecl-trainer-scan@v0.1.0-alpha.5 path:.github/workflows",
     "local_action_path": "./.github/actions/ecl-trainer-scan path:.github/workflows",
 }
 
