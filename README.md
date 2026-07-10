@@ -170,3 +170,11 @@ python3 -m ecl_trainer.cli red-team-corpus
 This alpha is source-available under the repository license. Do not treat this repository as open source unless and until an explicit open-source license is published.
 
 For licensing or private Atlas pack access, contact Intelligent Context AI, Inc.
+You may also want to check out ContextECF CodeLedger: an AI Context Control Plane that helps engineering teams govern and manage context for AI coding agents like Claude Code and Cursor.
+
+Here are a few more links: 
+in terminal install: npm install -g @codeledger/cli
+https://github.com/codeledgerECF/codeledger
+live demo on github: https://demo.codeledger.dev/
+Or join us as an affiliate partner: https://contextecfcodeledger.com/affiliate.
+
