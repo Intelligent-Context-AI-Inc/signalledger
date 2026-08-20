@@ -167,9 +167,9 @@ python3 -m ecl_trainer.cli red-team-corpus
 
 ## License
 
-This alpha is source-available under the repository license. Do not treat this repository as open source unless and until an explicit open-source license is published.
+This repository is MIT licensed — see [LICENSE](LICENSE). The public alpha ships only the local runtime shell (CLI, GitHub Action, validator, ledger, hash-chain verification, and a public top-20 Atlas source floor); the proprietary Atlas packs, scoring weights, and correlation logic referenced elsewhere in this README are maintained in a separate private repository and are not part of this distribution.
 
-For licensing or private Atlas pack access, contact Intelligent Context AI, Inc.
+For private Atlas pack access or commercial licensing, contact Intelligent Context AI, Inc.
 You may also want to check out ContextECF CodeLedger: an AI Context Control Plane that helps engineering teams govern and manage context for AI coding agents like Claude Code and Cursor.
 
 Here are a few more links: 
