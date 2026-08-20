@@ -7,6 +7,7 @@ name = "ecl-trainer"
 version = "0.1.0rc1"
 description = "Metadata-only training signal ledger SDK"
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
   "pydantic>=2",
